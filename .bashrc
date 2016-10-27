@@ -22,6 +22,9 @@ MANPATH="/usr/local/opt/coreutils/libexec/gnuman":$MANPATH
 export CC PATH MANPATH
 
 PAGER=less
+# -F autoquits less if the output can be displayed on one screen.
+# -r displays control characters raw (like ANSI colour codes).
+# -X disables sending the clear screen instruction on load.
 LESS=FrX
 EDITOR=vim
 # In general, this gives non-files as comment-coloured, files as standard text,
