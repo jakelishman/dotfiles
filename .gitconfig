@@ -1,0 +1,12 @@
+[user]
+	name = Jake Lishman
+	email = jakelishman@gmail.com
+[core]
+	autocrlf = input
+	editor = vim
+	safecrlf = false
+	excludesfile = C:/Users/Jake/.gitignore_global
+[push]
+	default = simple
+[merge]
+	tool = gvimdiff
