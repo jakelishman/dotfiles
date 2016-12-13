@@ -8,18 +8,12 @@ alias ping='ping -c 5'
 alias glo='git log --oneline'
 alias gs='git status'
 
-# Spawn an ssh-agent on bash login.
-SSHAGENT=`which ssh-agent`
-SSHAGENTARGS="-s"
-if [ -z "$SSH_AUTH_SOCK" -a -x "$SSHAGENT" ]; then
-    eval `$SSHAGENT $SSHAGENTARGS` > /dev/null
-    trap "kill $SSH_AGENT_PID" 0
-fi
-
 CC=gcc
-PATH="/usr/local/opt/gcc/bin/:/usr/local/opt/coreutils/libexec/gnubin":$PATH
+PATH="/usr/local/var/homebrew/linked:/usr/local/opt/gcc/bin/:/usr/local/opt/coreutils/libexec/gnubin":$PATH
 MANPATH="/usr/local/opt/coreutils/libexec/gnuman":$MANPATH
 export CC PATH MANPATH
+
+alias vim='vim --servername VIM'
 
 PAGER=less
 # -F autoquits less if the output can be displayed on one screen.
@@ -43,27 +37,39 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 # Source relevant API tokens - this file shouldn't be on github.
 source ~/.api-tokens.sh
 
-# The '\[' preceding each colour code is necessary to make sure that long
-# commands that overrun a single line are handled correctly.  The '\]'
-# succeeding each one are required to stop backspace from deleting parts of the
-# prompt!
+# The '\[', '\]' wrap non-printing characters. These ensure that readline knows
+# how many characters are in the prompt, so it deletes the correct number when
+# the line is cleared, and when it wraps.
 
 # Initialise empty PS1.
 PS1=''
 # Extra newline for spacing out new inputs.
 PS1+='\n'
 # Working directory in yellow, in square brackets.
-PS1+='\[\e[0;33m[\w] \]'
+PS1+='\[\e[0;33m\][\w] '
 # Show a git status prompt in green if relevant.
-PS1+='\[\e[0;32m`__git_ps1 "(%s)"`\n\]'
+PS1+='\[\e[0;32m\]`__git_ps1 "(%s)"`\n'
 # Username in magenta.
-PS1+='\[\e[0;35m\u\]'
+PS1+='\[\e[0;35m\]\u'
 # @ symbol in yellow.
-PS1+='\[\e[0;33m@\]'
+PS1+='\[\e[0;33m\]@'
 # System hostname in blue.
-PS1+='\[\e[0;34m\h\]'
+PS1+='\[\e[0;34m\]\h'
 # Prompt symbol ($ or #) in magenta.
-PS1+='\[\e[0;35m\$\]'
+PS1+='\[\e[0;35m\]\$'
 # Reset to solarized dark base0 colour for default text.
-PS1+='\[\e[1;34m \]'
-export PS1
+PS1+='\[\e[1;34m\] '
+
+# Set the PS2 (continuation prompt).
+PS2=''
+# Magenta for the username length
+PS2+='\[\e[0;35m\]----'
+# Yellow for the @
+PS2+='\[\e[0;33m\]-'
+# Blue for the hostname
+PS2+='\[\e[0;34m\]------'
+# Magenta for the prompt
+PS2+='\[\e[0;35m\]>'
+# Reset to solarized dark bas0 colour for input.
+PS2+='\[\e[1;34m\] '
+export PS1 PS2

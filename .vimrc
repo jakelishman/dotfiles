@@ -57,5 +57,16 @@ set backspace=indent,eol,start
 set laststatus=2
 set statusline=%t%r%m\ %y[%{&ff}]%h%=%c,%l/%L\ %P
 
+"" Configure vimtex to do what we want.
+" Don't open the quickfix window if there are only warnings.
+let g:vimtex_quickfix_open_on_warning=0
+
+" Disable insert mode mappings.
+let g:vimtex_imaps_leader='¬'
+let g:vimtex_imaps_enabled=0
+
+" Make vimtex recognise end-of-line comments when using 'gq'.
+let g:vimtex_format_enabled=1
+
 filetype plugin indent on
 syntax on
