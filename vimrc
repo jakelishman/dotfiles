@@ -5,13 +5,26 @@ filetype off
 "" Configure Vundle
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-
+" Vundle package manager.
 Plugin 'gmarik/Vundle.vim'
+
+" Syntax checker integrations (rust, latex, C)
 Plugin 'scrooloose/syntastic'
+
+" NERDTree file browser (and git symbols)
+Plugin 'scrooloose/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+
+" Git gutter symbols to show changes.
+Plugin 'airblade/vim-gitgutter'
+
+" Delete surrounding brackets `ds)`.
+Plugin 'tpope/vim-surround'
+
+" Language-specific plugins.
 Plugin 'fsharp/vim-fsharp'
 Plugin 'lervag/vimtex'
 Plugin 'rust-lang/rust.vim'
-
 call vundle#end()
 
 " Set MacVim options
@@ -69,13 +82,19 @@ set backspace=indent,eol,start
 
 "" Set statusline to be actually useful.
 set laststatus=2
-set statusline=%t%r%m\ %y[%{&ff}]%h%=%c,%l/%L\ %P
+set statusline=%t%r%m\ %y[%{&ff}]%h\ %=\ %c,%l/%L\ %P
+
+"" Set the filling characters for various gutters.
+" stl   the status line of the current window (no filling, because it's visible)
+" stlnc the status line of unfocussed windows ('-' for visibility)
+" vert  the vertical window separator
+set fillchars=stl:\ ,stlnc:-,vert:\|,fold:\ ,diff:-
 
 "" Configure vimtex to do what we want.
 " Don't open the quickfix window if there are only warnings.
 let g:vimtex_quickfix_open_on_warning=0
 
-" Don't autoindent things (it sucks at it).
+" Don't let vimtex autoindent things (it sucks at it).
 let g:vimtex_indent_enabled=0
 
 " Disable insert mode mappings.
@@ -86,7 +105,10 @@ let g:vimtex_imaps_enabled=0
 let g:vimtex_format_enabled=1
 
 " Disable lacheck from checking latex documents.
-let g:syntastic_tex_checkers=['chktex']
+let g:syntastic_tex_checkers=[]
+
+" Map ^n to toggle the NERDTree browser.
+map <C-n> :NERDTreeToggle<CR>
 
 filetype plugin indent on
 syntax on
