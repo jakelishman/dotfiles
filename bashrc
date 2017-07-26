@@ -6,16 +6,50 @@ alias mkdir='mkdir -p -v'
 alias glo='git log --oneline'
 alias gs='git status'
 
-ADDTOPATH=""
-ADDTOPATH+="$HOME/.cargo/bin:"
-ADDTOPATH+="/usr/local/var/homebrew/linked:"
-ADDTOPATH+="/usr/local/opt/gcc/bin:"
-ADDTOPATH+="/usr/local/opt/coreutils/libexec/gnubin:"
-export PATH="$ADDTOPATH$PATH"
+export MENDELEY_BIBTEX="$HOME/Dropbox/mendeley/bibtex"
 
-ADDTOMAN=""
-ADDTOMAN+="/usr/local/opt/coreutils/libexec/gnuman:"
-export MAN="$ADDTOMAN$MAN"
+MKL_BASE="/opt/intel/compilers_and_libraries_2017.4.181/mac"
+
+ADD="$MKL_BASE/mkl/include"
+if [ -z "$CPATH" ]; then
+    export CPATH="$ADD"
+else
+    export CPATH="${ADD}:$CPATH"
+fi
+unset ADD
+
+ADD="$MKL_BASE/mkl/lib"
+ADD+=":$MKL_BASE/compiler/lib"
+if [ -z "$DYLD_LIBRARY_PATH" ]; then
+    export DYLD_LIBRARY_PATH=${ADD}
+else
+    export DYLD_LIBRARY_PATH="${ADD}:${DYLD_LIBRARY_PATH}"
+fi
+if [ -z "$LIBRARY_PATH" ]; then
+    export LIBRARY_PATH=${ADD}
+else
+    export LIBRARY_PATH="${ADD}:$LIBRARY_PATH"
+fi
+unset ADD
+
+ADD="$HOME/.cargo/bin"
+ADD+=":/usr/local/var/homebrew/linked"
+ADD+=":/usr/local/opt/gcc/bin"
+ADD+=":/usr/local/opt/coreutils/libexec/gnubin"
+if [ -z "$PATH" ]; then
+    export PATH=${ADD}
+else
+    export PATH="${ADD}:$PATH"
+fi
+unset ADD
+
+ADD="/usr/local/opt/coreutils/libexec/gnuman"
+if [ -z "$MAN" ]; then
+    export MAN=$ADD
+else
+    export MAN="${ADD}:$MAN"
+fi
+unset ADD
 
 export CC=gcc GCC_COLORS
 export EDITOR=vim
