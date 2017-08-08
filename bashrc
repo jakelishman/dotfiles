@@ -1,3 +1,14 @@
+# Source a file, but only if it exists.  This function actually returns an
+# executable command so that sourced functions and variables will be in the
+# correct scope.  Call this like:
+#   `__source if exists "file-to-source.sh"`
+# i.e. with surrounding backticks.
+function __source_if_exists { echo eval "\
+    if [ -e "$1" ]; then \
+        source "$1" ; \
+    fi";
+}
+
 alias ls='ls --color=auto --group-directories-first'
 alias ll='ls -l'
 alias grep='grep --color=auto'
@@ -68,14 +79,14 @@ export LS_COLORS="no=01;32:fi=01;34:di=00;35:ln=00;32:or=01;31:ex=00;34"
 export MONO_GAC_PREFIX="/usr/local"
 
 # Functions for better git integration with bash.
-source ~/.dotfiles/git-prompt.sh
-source ~/.dotfiles/git-completion.bash
+`__source_if_exists "~/.dotfiles/git-prompt.sh"`
+`__source_if_exists "~/.dotfiles/git-completion.bash"`
 
 # Make the git prompt show an asterisk if the index is dirty.
 export GIT_PS1_SHOWDIRTYSTATE=1 GIT_SSH
 
 # Source relevant API tokens - this file shouldn't be on github.
-source ~/.api-tokens.sh
+`__source_if_exists "~/.api-tokens.sh"`
 
 # The '\[', '\]' wrap non-printing characters. These ensure that readline knows
 # how many characters are in the prompt, so it deletes the correct number when
@@ -114,3 +125,6 @@ PS2+=${colouryellow}'-'${colourblue}
 PS2+=${HOSTNAME//?/-}${colourusername}'>'
 PS2+=${colourbase0}' '
 export PS1 PS2
+
+# Source machine-specific code
+`__source_if_exists "~/.machine-specific-setup.sh"`
