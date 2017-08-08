@@ -10,3 +10,6 @@
 	default = simple
 [merge]
 	tool = gvimdiff
+[color]
+    ui = auto
+    diff = true
