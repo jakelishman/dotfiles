@@ -6,3 +6,7 @@ host github
 host bitbucket
     hostname www.bitbucket.org
     user git
+
+host cx1
+    hostname login.cx1.hpc.imperial.ac.uk
+    user jl6516
