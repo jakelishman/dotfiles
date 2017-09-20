@@ -30,8 +30,10 @@ call vundle#end()
 " Set MacVim options
 if has("gui_running") && has("gui_macvim")
     set guifont=MonacoB:h13
-    set lines=45
-    set columns=175
+
+    command PDFSplit set lines=51 | set columns=99
+    command NoSplit  set lines=45 | set columns=175
+    NoSplit
 
     " Remove toolbars
     set guioptions-=r
@@ -109,6 +111,14 @@ let g:syntastic_tex_checkers=[]
 
 " Map ^n to toggle the NERDTree browser.
 map <C-n> :NERDTreeToggle<CR>
+
+" Set filetypes based on certain extensions
+autocmd BufNewFile,BufRead *.gnuplot    set filetype=gnuplot
+autocmd BufNewFile,BufRead *.tex        set filetype=tex
+
+" Correct capital letter typos!
+command Q q
+command W w
 
 filetype plugin indent on
 syntax on
