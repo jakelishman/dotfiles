@@ -50,6 +50,7 @@ colouryellow='\[\e[0;33m\]'
 colourblue='\[\e[0;34m\]'
 colourmagenta='\[\e[0;35m\]'
 colourbase0='\[\e[1;34m\]'
+colourreset='\[\e[0m\]'
 if [ "$UID" -eq 0 ]; then
     colourusername=${colourred}
 else
@@ -69,13 +70,13 @@ PS1+=${colourred}'`__error_code`\n'
 PS1+=${colouryellow}'[\w] '${colourgreen}'`__git_ps1 "(%s)"`\n'
 PS1+=${colourusername}'\u'${colouryellow}'@'
 PS1+=${colourblue}'\h'${colourusername}'\$'
-PS1+=${colourbase0}' '
+PS1+=${colourreset}' '
 
 PS2=''
 PS2+=${colourusername}${USER//?/-}
 PS2+=${colouryellow}'-'${colourblue}
 PS2+=${HOSTNAME//?/-}${colourusername}'>'
-PS2+=${colourbase0}' '
+PS2+=${colourreset}' '
 export PS1 PS2
 
 # Source machine-specific code
