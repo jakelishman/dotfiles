@@ -126,6 +126,9 @@ autocmd BufNewFile,BufRead *.tex        set filetype=tex
 command Q q
 command W w
 
+" Set language for the spellcheck, but don't turn it on.
+set spelllang=en_gb
+
 " Command used by the Python syntax folder to produce the foldtext for docstring
 " folds.
 function PythonDocstringFoldText()
