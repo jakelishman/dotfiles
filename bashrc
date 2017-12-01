@@ -9,9 +9,26 @@ function __source_if_exists { echo eval "\
     fi";
 }
 
-alias ls='ls --color=auto --group-directories-first'
+# ANSI colour codes corresponding to the solarised colours.
+sol_base03='1;30'
+sol_base02='30'
+sol_base01='1;32'
+sol_base00='1;33'
+sol_base0='1;34'
+sol_base1='1;36'
+sol_base2='37'
+sol_base3='1;37'
+sol_yellow='33'
+sol_orange='1;31'
+sol_red='31'
+sol_magenta='35'
+sol_violet='1;35'
+sol_blue='34'
+sol_cyan='36'
+sol_green='32'
+
+# Permanent aliases.
 alias ll='ls -l'
-alias grep='grep --color=auto'
 alias mkdir='mkdir -p -v'
 
 alias glo='git log --oneline'
@@ -25,10 +42,27 @@ export PAGER=less
 # -X disables sending the clear screen instruction on load.
 export LESS=FrX
 
+# If we're running iTerm2, then we can safely insert the sequence to enable
+# italics into colour sequences.
+if [ "$TERM_PROGRAM" = "iTerm.app" ]; then
+    italics="3;"
+else
+    italics=""
+fi
+
 # In general, this gives non-files as comment-coloured, files as standard text,
 # executables as blue, directories as magenta and symlinks as green (unless
 # they're broken links, in which case they're red.
-export LS_COLORS="no=01;32:fi=01;34:di=00;35:ln=00;32:or=01;31:ex=00;34"
+#
+# The proceeding '0;' resets any colour flags.
+LS_COLORS=""
+LS_COLORS+=":no=${italics}${sol_base00}"
+LS_COLORS+=":fi=${sol_base0}"
+LS_COLORS+=":ex=${sol_blue}"
+LS_COLORS+=":di=${sol_magenta}"
+LS_COLORS+=":ln=${sol_green}"
+LS_COLORS+=":or=${sol_red}"
+export LS_COLORS
 
 # Functions for better git integration with bash.
 `__source_if_exists "~/.dotfiles/git-prompt.sh"`
@@ -43,18 +77,17 @@ export GIT_PS1_SHOWDIRTYSTATE=1 GIT_SSH
 # The '\[', '\]' wrap non-printing characters. These ensure that readline knows
 # how many characters are in the prompt, so it deletes the correct number when
 # the line is cleared, and when it wraps.
-
-colourred='\[\e[0;31m\]'
-colourgreen='\[\e[0;32m\]'
-colouryellow='\[\e[0;33m\]'
-colourblue='\[\e[0;34m\]'
-colourmagenta='\[\e[0;35m\]'
-colourbase0='\[\e[1;34m\]'
-colourreset='\[\e[0m\]'
+ps1_red='\[\e['$sol_red'm\]'
+ps1_green='\[\e['$sol_green'm\]'
+ps1_yellow='\[\e['$sol_yellow'm\]'
+ps1_blue='\[\e['$sol_blue'm\]'
+ps1_magenta='\[\e['$sol_magenta'm\]'
+ps1_base0='\[\e['$sol_base0'm\]'
+ps1_reset='\[\e[0m\]'
 if [ "$UID" -eq 0 ]; then
-    colourusername=${colourred}
+    ps1_username=$ps1_red
 else
-    colourusername=${colourmagenta}
+    ps1_username=$ps1_magenta
 fi
 
 # Print out the exit code of the previous command if it wasn't 0.
@@ -65,19 +98,45 @@ function __error_code {
     fi
 }
 
+# Default prompt format.
 PS1=''
-PS1+=${colourred}'`__error_code`\n'
-PS1+=${colouryellow}'[\w] '${colourgreen}'`__git_ps1 "(%s)"`\n'
-PS1+=${colourusername}'\u'${colouryellow}'@'
-PS1+=${colourblue}'\h'${colourusername}'\$'
-PS1+=${colourreset}' '
+PS1+=${ps1_red}'`__error_code`\n'
+PS1+=${ps1_yellow}'[\w]'
+if [ -e "$HOME/.dotfiles/git-prompt.sh" ]; then
+    PS1+=${ps1_green}' `__git_ps1 "(%s)"`'
+fi
+PS1+='\n'
+PS1+=${ps1_username}'\u'${ps1_yellow}'@'
+PS1+=${ps1_blue}'\h'${ps1_username}'\$'
+PS1+=${ps1_reset}' '
 
+# Continuation prompt format.
 PS2=''
-PS2+=${colourusername}${USER//?/-}
-PS2+=${colouryellow}'-'${colourblue}
-PS2+=${HOSTNAME//?/-}${colourusername}'>'
-PS2+=${colourreset}' '
+PS2+=${ps1_username}${USER//?/-}
+PS2+=${ps1_yellow}'-'${ps1_blue}
+PS2+=${HOSTNAME//?/-}${ps1_username}'>'
+PS2+=${ps1_reset}' '
 export PS1 PS2
 
 # Source machine-specific code
-`__source_if_exists "~/.machine-specific-setup.sh"`
+`__source_if_exists "$HOME/.machine-specific-setup.sh"`
+
+# Alias ls and grep to use colours correctly if the version in the path works
+# with the colouring option.  BSD (Mac) ls doesn't recognise the --color=auto
+# option, but the Homebrew GNU ls does, so this colour test comes after the
+# machine-specific setup which may alter the PATH.
+ls --color=auto &>/dev/null
+ls_add_options=''
+if [ "$?" -eq "0" ]; then
+    ls_add_options+=' --color=auto'
+fi
+ls --group-directories-first &>/dev/null
+if [ "$?" -eq "0" ]; then
+    ls_add_options+=' --group-directories-first'
+fi
+alias ls="ls${ls_add_options}"
+
+echo | grep --color=auto "" &>/dev/null
+if [ "$?" -eq "0" ]; then
+    alias grep='grep --color=auto'
+fi
