@@ -41,7 +41,14 @@ endif
 "" Configure solarized to work correctly
 syntax enable
 set background=dark
-let g:solarized_italic=1
+" Force enable italics in our modified version of solarized.vim
+if $TERM_PROGRAM =~ "iTerm.app"
+    set t_Co=16
+    set t_ZH=[3m
+    set t_ZR=[23m
+    let g:solarized_italic=1
+    let g:solarized_termcolors=16
+endif
 colorscheme solarized
 
 "" Set file encoding
