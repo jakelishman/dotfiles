@@ -113,6 +113,7 @@ let g:vimtex_format_enabled=1
 
 " Disable lacheck from checking latex documents.
 let g:syntastic_tex_checkers=[]
+let g:syntastic_python_checkers=[]
 
 " Map ^n to toggle the NERDTree browser.
 map <C-n> :NERDTreeToggle<CR>
@@ -124,6 +125,12 @@ autocmd BufNewFile,BufRead *.tex        set filetype=tex
 " Correct capital letter typos!
 command Q q
 command W w
+
+" Command used by the Python syntax folder to produce the foldtext for docstring
+" folds.
+function PythonDocstringFoldText()
+    return '    """docstring""" (' . string(v:foldend - v:foldstart + 1) . ')'
+endfunction
 
 filetype plugin indent on
 syntax on
