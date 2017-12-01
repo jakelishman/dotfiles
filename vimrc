@@ -30,10 +30,8 @@ call vundle#end()
 " Set MacVim options
 if has("gui_running") && has("gui_macvim")
     set guifont=MonacoB:h13
-
-    command PDFSplit set lines=51 | set columns=99
-    command NoSplit  set lines=45 | set columns=175
-    NoSplit
+    set lines=45
+    set columns=87
 
     " Remove toolbars
     set guioptions-=r
