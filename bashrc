@@ -99,7 +99,7 @@ function __error_code {
 }
 
 # Default prompt format.
-PS1=''
+PS1=${ps1_reset}
 PS1+=${ps1_red}'`__error_code`\n'
 PS1+=${ps1_yellow}'[\w]'
 if [ -e "$HOME/.dotfiles/git-prompt.sh" ]; then
@@ -111,7 +111,7 @@ PS1+=${ps1_blue}'\h'${ps1_username}'\$'
 PS1+=${ps1_reset}' '
 
 # Continuation prompt format.
-PS2=''
+PS2=${ps1_reset}
 PS2+=${ps1_username}${USER//?/-}
 PS2+=${ps1_yellow}'-'${ps1_blue}
 PS2+=${HOSTNAME//?/-}${ps1_username}'>'
