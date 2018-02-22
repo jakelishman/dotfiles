@@ -10,3 +10,7 @@ host bitbucket
 host cx1
     hostname login.cx1.hpc.imperial.ac.uk
     user jl6516
+
+host zoo
+    hostname 155.198.112.36
+    user jlishman
