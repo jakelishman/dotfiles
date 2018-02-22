@@ -101,6 +101,26 @@ set fillchars=stl:\ ,stlnc:-,vert:\|,fold:\ ,diff:-
 " Don't open the quickfix window if there are only warnings.
 let g:vimtex_quickfix_open_on_warning=0
 
+" Set latexmk compiler options
+" Puts build files (including the output) into './build' relative to the project
+" root, disables continuous and callback compilation (though I might change the
+" latter at some point), and disables synctex generation.
+let g:vimtex_compiler_latexmk = {
+    \ 'backend'    : 'process',
+    \ 'background' : 1,
+    \ 'build_dir'  : './build',
+    \ 'callback'   : 0,
+    \ 'continuous' : 0,
+    \ 'executable' : 'latexmk',
+    \ 'options'    : [
+        \ '-pdf',
+        \ '-verbose',
+        \ '-file-line-error',
+        \ '-synctex=0',
+        \ '-interaction=nonstopmode',
+    \ ],
+\}
+
 " Don't let vimtex autoindent things (it sucks at it).
 let g:vimtex_indent_enabled=0
 
