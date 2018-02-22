@@ -1,4 +1,4 @@
-packages=bash ssh git vim
+packages=bash ssh git vim python
 
 install:
 	stow --no-folding ${packages} -t ${HOME}
