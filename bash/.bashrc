@@ -89,6 +89,7 @@ ps1_green='\[\e['$sol_green'm\]'
 ps1_yellow='\[\e['$sol_yellow'm\]'
 ps1_blue='\[\e['$sol_blue'm\]'
 ps1_magenta='\[\e['$sol_magenta'm\]'
+ps1_violet='\[\e['$sol_violet'm\]'
 ps1_base0='\[\e['$sol_base0'm\]'
 ps1_reset='\[\e[0m\]'
 if [ "$UID" -eq 0 ]; then
@@ -101,6 +102,8 @@ fi
 PS1=${ps1_reset}
 PS1+=${ps1_red}'`__error_code`\n'
 PS1+=${ps1_yellow}'[\w]'
+PS1+='`if [ -n "$CONDA_DEFAULT_ENV" ]; '
+PS1+='then printf "'${ps1_violet}' ($CONDA_DEFAULT_ENV)"; fi;`'${ps1_reset}
 if [ -e "${bash_files_dir}/git-prompt.sh" ]; then
     PS1+=${ps1_green}' `__git_ps1 "(%s)"`'
 fi
