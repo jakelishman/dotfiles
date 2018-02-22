@@ -5,11 +5,9 @@
 	autocrlf = input
 	editor = vim
 	safecrlf = false
-	excludesfile = ~/.dotfiles/gitignore_global
+	excludesfile = ~/.gitignore_global
 [push]
 	default = simple
-[merge]
-	tool = gvimdiff
 [color]
-    ui = auto
-    diff = true
+	ui = auto
+	diff = true

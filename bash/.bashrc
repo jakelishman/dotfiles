@@ -1,3 +1,7 @@
+# Directory to store additional bash files sourced in this file and other
+# initialisations.
+bash_files_dir="$HOME/.bash_files"
+
 # Source a file, but only if it exists.  This function actually returns an
 # executable command so that sourced functions and variables will be in the
 # correct scope.  Call this like:
@@ -65,14 +69,14 @@ LS_COLORS+=":or=${sol_red}"
 export LS_COLORS
 
 # Functions for better git integration with bash.
-`__source_if_exists "~/.dotfiles/git-prompt.sh"`
-`__source_if_exists "~/.dotfiles/git-completion.bash"`
+`__source_if_exists "${bash_files_dir}/git-prompt.sh"`
+`__source_if_exists "${bash_files_dir}/git-completion.bash"`
 
 # Make the git prompt show an asterisk if the index is dirty.
 export GIT_PS1_SHOWDIRTYSTATE=1 GIT_SSH
 
 # Source relevant API tokens - this file shouldn't be on github.
-`__source_if_exists "~/.api-tokens.sh"`
+`__source_if_exists "$HOME/.api-tokens.sh"`
 
 # The '\[', '\]' wrap non-printing characters. These ensure that readline knows
 # how many characters are in the prompt, so it deletes the correct number when
@@ -102,7 +106,7 @@ function __error_code {
 PS1=${ps1_reset}
 PS1+=${ps1_red}'`__error_code`\n'
 PS1+=${ps1_yellow}'[\w]'
-if [ -e "$HOME/.dotfiles/git-prompt.sh" ]; then
+if [ -e "${bash_files_dir}/git-prompt.sh" ]; then
     PS1+=${ps1_green}' `__git_ps1 "(%s)"`'
 fi
 PS1+='\n'
