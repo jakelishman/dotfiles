@@ -22,7 +22,7 @@ function __error_code {
 bash_files_dir="$HOME/.bash_files"
 
 # Get the initialisation hook.
-`__source_if_exists "${bash_files_dir}/bashrc-hook-init.sh"`
+`__source_if_exists "${bash_files_dir}/bashrc-hook-init.bash"`
 
 ## Variable setup
 
@@ -118,7 +118,7 @@ PS2+=${ps1_reset}' '
 export PS1 PS2
 
 # Source machine-specific code
-`__source_if_exists "${bash_files_dir}/bashrc-hook-environment-variables.sh"`
+`__source_if_exists "${bash_files_dir}/bashrc-hook-environment-variables.bash"`
 
 # Permanent aliases.
 alias ll='ls -l'
@@ -147,8 +147,5 @@ if [ "$?" -eq "0" ]; then
     alias grep='grep --color=auto'
 fi
 
-# Source relevant API tokens - this file shouldn't be on github.
-`__source_if_exists "${bash_files_dir}/api-tokens.sh"`
-
 # Source any final bash hooks.
-`__source_if_exists "${bash_files_dir}/bashrc-hook-final.sh"`
+`__source_if_exists "${bash_files_dir}/bashrc-hook-final.bash"`
