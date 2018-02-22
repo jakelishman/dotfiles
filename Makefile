@@ -4,4 +4,4 @@ install:
 	stow --no-folding ${packages} -t ${HOME}
 
 uninstall:
-	stow --no-folding -D ${packages} -t ${HOME}
+	stow -D ${packages} -t ${HOME}

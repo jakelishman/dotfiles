@@ -1,7 +1,3 @@
-# Directory to store additional bash files sourced in this file and other
-# initialisations.
-bash_files_dir="$HOME/.bash_files"
-
 # Source a file, but only if it exists.  This function actually returns an
 # executable command so that sourced functions and variables will be in the
 # correct scope.  Call this like:
@@ -12,6 +8,23 @@ function __source_if_exists { echo eval "\
         source "$1" ; \
     fi";
 }
+
+# Print out the exit code of the previous command if it wasn't 0.
+function __error_code {
+    code=$?
+    if [ "${code}" -ne 0 ]; then
+        printf "\n(${code})"
+    fi
+}
+
+# Directory to store additional bash files sourced in this file and other
+# initialisations.
+bash_files_dir="$HOME/.bash_files"
+
+# Get the initialisation hook.
+`__source_if_exists "${bash_files_dir}/bashrc-hook-init.sh"`
+
+## Variable setup
 
 # ANSI colour codes corresponding to the solarised colours.
 sol_base03='1;30'
@@ -31,12 +44,13 @@ sol_blue='34'
 sol_cyan='36'
 sol_green='32'
 
-# Permanent aliases.
-alias ll='ls -l'
-alias mkdir='mkdir -p -v'
-
-alias glo='git log --oneline'
-alias gs='git status'
+# If we're running iTerm2, then we can safely insert the sequence to enable
+# italics into colour sequences.
+if [ "$TERM_PROGRAM" = "iTerm.app" ]; then
+    italics="3;"
+else
+    italics=""
+fi
 
 export CC=gcc GCC_COLORS
 export EDITOR=vim
@@ -45,14 +59,6 @@ export PAGER=less
 # -r displays control characters raw (like ANSI colour codes).
 # -X disables sending the clear screen instruction on load.
 export LESS=FrX
-
-# If we're running iTerm2, then we can safely insert the sequence to enable
-# italics into colour sequences.
-if [ "$TERM_PROGRAM" = "iTerm.app" ]; then
-    italics="3;"
-else
-    italics=""
-fi
 
 # In general, this gives non-files as comment-coloured, files as standard text,
 # executables as blue, directories as magenta and symlinks as green (unless
@@ -75,9 +81,6 @@ export LS_COLORS
 # Make the git prompt show an asterisk if the index is dirty.
 export GIT_PS1_SHOWDIRTYSTATE=1 GIT_SSH
 
-# Source relevant API tokens - this file shouldn't be on github.
-`__source_if_exists "$HOME/.api-tokens.sh"`
-
 # The '\[', '\]' wrap non-printing characters. These ensure that readline knows
 # how many characters are in the prompt, so it deletes the correct number when
 # the line is cleared, and when it wraps.
@@ -93,14 +96,6 @@ if [ "$UID" -eq 0 ]; then
 else
     ps1_username=$ps1_magenta
 fi
-
-# Print out the exit code of the previous command if it wasn't 0.
-function __error_code {
-    code=$?
-    if [ "${code}" -ne 0 ]; then
-        printf "\n(${code})"
-    fi
-}
 
 # Default prompt format.
 PS1=${ps1_reset}
@@ -123,7 +118,14 @@ PS2+=${ps1_reset}' '
 export PS1 PS2
 
 # Source machine-specific code
-`__source_if_exists "$HOME/.machine-specific-setup.sh"`
+`__source_if_exists "${bash_files_dir}/bashrc-hook-environment-variables.sh"`
+
+# Permanent aliases.
+alias ll='ls -l'
+alias mkdir='mkdir -p -v'
+
+alias glo='git log --oneline'
+alias gs='git status'
 
 # Alias ls and grep to use colours correctly if the version in the path works
 # with the colouring option.  BSD (Mac) ls doesn't recognise the --color=auto
@@ -144,3 +146,9 @@ echo | grep --color=auto "" &>/dev/null
 if [ "$?" -eq "0" ]; then
     alias grep='grep --color=auto'
 fi
+
+# Source relevant API tokens - this file shouldn't be on github.
+`__source_if_exists "${bash_files_dir}/api-tokens.sh"`
+
+# Source any final bash hooks.
+`__source_if_exists "${bash_files_dir}/bashrc-hook-final.sh"`
