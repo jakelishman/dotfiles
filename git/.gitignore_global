@@ -1,2 +1,9 @@
+# Vim
 .*.sw[po]
+
+# Python
+__pycache__
+*.pyc
+
+# Mac
 .DS_Store
