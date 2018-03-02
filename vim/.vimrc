@@ -27,6 +27,10 @@ Plugin 'lervag/vimtex'
 Plugin 'rust-lang/rust.vim'
 call vundle#end()
 
+" Set leader keys.
+let mapleader="\\"
+let maplocalleader="\\"
+
 " Set MacVim options
 if has("gui_running") && has("gui_macvim")
     set guifont=MonacoB:h13
@@ -149,11 +153,12 @@ command W w
 " Set language for the spellcheck, but don't turn it on.
 set spelllang=en_gb
 
-" Command used by the Python syntax folder to produce the foldtext for docstring
-" folds.
-function PythonDocstringFoldText()
-    return '    """docstring""" (' . string(v:foldend - v:foldstart + 1) . ')'
-endfunction
+" Options for the python syntax highlighting.
+let python_no_builtin_highlight = 1
+let python_space_error_highlight = 1
+
+" Guarantee that the shell in use is bash.
+let g:is_bash = 1
 
 filetype plugin indent on
 syntax on

@@ -32,7 +32,7 @@ class SolarizedStyle(Style):
         #token.Name
         token.Name.Attribute: base0,
         token.Name.Builtin: blue,
-        #token.Name.Builtin.Pseudo: blue,
+        token.Name.Builtin.Pseudo: base01 + ' italic',
         token.Name.Class: magenta,
         token.Name.Constant: orange,
         token.Name.Decorator: orange,
