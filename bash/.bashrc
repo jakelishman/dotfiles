@@ -3,18 +3,28 @@
 # correct scope.  Call this like:
 #   `__source if exists "file-to-source.sh"`
 # i.e. with surrounding backticks.
-function __source_if_exists { echo eval "\
+function _bashrc_source_if_exists { echo eval "\
     if [ -e "$1" ]; then \
         source "$1" ; \
     fi";
 }
 
 # Print out the exit code of the previous command if it wasn't 0.
-function __error_code {
+function _bashrc_error_code {
     code=$?
     if [ "${code}" -ne 0 ]; then
         printf "\n(${code})"
     fi
+}
+
+# Print a string representing the current working directory.
+function _bashrc_ps1_pwd {
+    printf "[${PWD/#$HOME/~}]"
+}
+
+# Get the length of the string representing the current directory in the PS1.
+function _bashrc_ps1_pwd_length {
+    _bashrc_ps1_pwd | wc -c
 }
 
 # Directory to store additional bash files sourced in this file and other
@@ -22,7 +32,7 @@ function __error_code {
 bash_files_dir="$HOME/.bash_files"
 
 # Get the initialisation hook.
-`__source_if_exists "${bash_files_dir}/bashrc-hook-init.bash"`
+`_bashrc_source_if_exists "${bash_files_dir}/bashrc-hook-init.bash"`
 
 ## Variable setup
 
@@ -75,8 +85,8 @@ LS_COLORS+=":or=${sol_red}"
 export LS_COLORS
 
 # Functions for better git integration with bash.
-`__source_if_exists "${bash_files_dir}/git-prompt.sh"`
-`__source_if_exists "${bash_files_dir}/git-completion.bash"`
+`_bashrc_source_if_exists "${bash_files_dir}/git-prompt.sh"`
+`_bashrc_source_if_exists "${bash_files_dir}/git-completion.bash"`
 
 # Make the git prompt show an asterisk if the index is dirty.
 export GIT_PS1_SHOWDIRTYSTATE=1 GIT_SSH
@@ -100,8 +110,9 @@ fi
 
 # Default prompt format.
 PS1=${ps1_reset}
-PS1+=${ps1_red}'`__error_code`\n'
-PS1+=${ps1_yellow}'[\w]'
+PS1+=${ps1_red}'`_bashrc_error_code`\n'
+PS1+=${ps1_yellow}'`if [ $(_bashrc_ps1_pwd_length) -le 100 ]; \
+                    then _bashrc_ps1_pwd; fi;`'${ps1_reset}
 PS1+='`if [ -n "$CONDA_DEFAULT_ENV" ]; '
 PS1+='then printf "'${ps1_violet}' ($CONDA_DEFAULT_ENV)"; fi;`'${ps1_reset}
 if [ -e "${bash_files_dir}/git-prompt.sh" ]; then
@@ -121,7 +132,7 @@ PS2+=${ps1_reset}' '
 export PS1 PS2
 
 # Source machine-specific code
-`__source_if_exists "${bash_files_dir}/bashrc-hook-environment-variables.bash"`
+`_bashrc_source_if_exists "${bash_files_dir}/bashrc-hook-environment-variables.bash"`
 
 # Permanent aliases.
 alias ll='ls -l'
@@ -151,4 +162,4 @@ if [ "$?" -eq "0" ]; then
 fi
 
 # Source any final bash hooks.
-`__source_if_exists "${bash_files_dir}/bashrc-hook-final.bash"`
+`_bashrc_source_if_exists "${bash_files_dir}/bashrc-hook-final.bash"`
