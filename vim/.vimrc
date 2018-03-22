@@ -146,6 +146,10 @@ map <C-n> :NERDTreeToggle<CR>
 autocmd BufNewFile,BufRead *.gnuplot    set filetype=gnuplot
 autocmd BufNewFile,BufRead *.tex        set filetype=tex
 
+" Set the colour column to be at the edge of the textwidth for the git commit
+" message editor.
+autocmd BufNewFile,BufRead COMMIT_EDITMSG let &colorcolumn=73
+
 " Correct capital letter typos!
 command Q q
 command W w

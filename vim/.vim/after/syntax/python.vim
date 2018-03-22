@@ -20,7 +20,7 @@ hi link pythonDocstring Comment
 
 " Make the pseudo-builtin idenfitier 'self' highlight as comment - it's so
 " frequently used and rather unimportant.
-syn keyword pythonSelf self
+syn keyword pythonSelf cls self
 hi link pythonSelf Comment
 
 " Match words before '.' as being a namespace construct, so highlight them as
@@ -30,6 +30,15 @@ hi link pythonClass Namespace
 " Make things which lexically look like a function call get coloured in the
 " correct colours.
 syn match pythonFunction /\h\+(/me=e-1
+
+" Delete python 2-specific keywords from the pythonStatement group
+syn clear pythonStatement
+syn keyword pythonStatement as assert break continue del global
+syn keyword pythonStatement lambda nonlocal pass return with
+syn keyword pythonStatement yield nextgroup=pythonYieldFrom skipwhite
+syn keyword pythonStatement class def nextgroup=pythonFunction skipwhite
+syn keyword pythonYieldFrom from contained
+hi link pythonYieldFrom pythonStatement
 
 " Overwrite the highlighting of 'None', 'True' and 'False' to be literals rather
 " than the default 'Statement'.
