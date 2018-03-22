@@ -1,3 +1,12 @@
+# Do nothing if bash is not running interactively.
+reset_extglob=`shopt -p extglob`
+shopt -s extglob
+case "$-" in
+    !(*i*) ) return ;;
+esac
+eval "$reset_extglob"
+unset reset_extglob
+
 # Source a file, but only if it exists.  This function actually returns an
 # executable command so that sourced functions and variables will be in the
 # correct scope.  Call this like:
