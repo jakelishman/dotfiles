@@ -1,20 +1,60 @@
 " Reformat include lines.
 syn clear pythonInclude
 syn keyword pythonIncludeStatement as from import contained
-syn match pythonIncludeLine /^\(import\|from\).*$/
-    \ contains=pythonIncludeStatement
-hi link pythonIncludeLine Namespace
-hi link pythonIncludeStatement PreProc
+syn match pythonIncludeModule
+    \ +\.*\(\h\w*\(\.\h\w*\)*\)\=+ contained
+syn match pythonIncludeLine /^\s*\(import\|from\).*$/
+    \ contains=pythonIncludeStatement,pythonIncludeModule
+hi link pythonIncludeStatement Operator
+hi link pythonIncludeModule Namespace
+
+" Make string highlighting accurate for how Python 3 is interpreted.
+syn clear pythonEscape pythonString pythonRawString
+syn match pythonEscape +\\$+
+syn match pythonEscape +\\[\x00-\x7f]+ contained
+syn match pythonEscape +\\x\x\{2}+ contained
+syn match pythonEscape +\\\o\{2,3}+ contained
+syn match pythonStringEscape +\\N{.\+}+ contained
+syn match pythonStringEscape +\\u\x\{4}+ contained
+syn match pythonStringEscape +\\U\x\{8}+ contained
+syn region pythonString
+    \ start=+[fFuU]\=\z(['"]\)+ end=+\z1+ keepend skip=+\\\\\|\\\z1+
+    \ contains=pythonEscape,pythonStringEscape,@Spell
+syn region pythonString
+    \ start=+[fFuU]\=\z('''\|"""\)+ end=+\z1+ keepend skip=+\\\\\|\\\z1+
+    \ contains=pythonEscape,pythonStringEscape,pythonSpaceError,@Spell
+syn region pythonString
+    \ start=+\([rR]\|[rR][fF]\|[fF][rR]\)\z(['"]\)+ end=+\z1+
+    \ contains=@Spell oneline display
+syn region pythonString
+    \ start=+\([rR]\|[rR][fF]\|[fF][rR]\)\z('''\|"""\)+ end=+\z1+
+    \ contains=pythonSpaceError,@Spell
+syn region pythonByteString
+    \ start=+[bB]\z(['"]\)+ end=+\z1+ keepend skip=+\\\\\|\\\z1+
+    \ contains=pythonEscape,@Spell
+syn region pythonByteString
+    \ start=+[bB]\z('''\|"""\)+ end=+\z1+ keepend skip=+\\\\\|\\\z1+
+    \ contains=pythonEscape,pythonSpaceError,@Spell
+syn region pythonByteString
+    \ start=+\([bB][rR]\|[rR][bB]\)\z(['"]\)+ end=+\z1+ keepend
+    \ contains=@Spell oneline display
+syn region pythonByteString
+    \ start=+\([bB][rR]\|[rR][bB]\)\z('''\|"""\)+ end=+\z1+ keepend
+    \ contains=pythonSpaceError,@Spell
+hi link pythonStringEscape pythonEscape
+hi link pythonEscape Special
+hi link pythonString String
+hi link pythonByteString String
 
 " Match a python docstring as as a foldable comment region.
 syn region pythonDocstring start=+^\s*[uU]\?[rR]\?"""+ end=+"""+
     \ fold
     \ keepend excludenl
-    \ contains=pythonEscape,@Spell,pythonDoctest,pythonDocTest2,pythonSpaceError
+    \ contains=pythonEscape,@Spell,pythonSpaceError
 syn region pythonDocstring start=+^\s*[uU]\?[rR]\?'''+ end=+'''+
     \ fold
     \ keepend excludenl
-    \ contains=pythonEscape,@Spell,pythonDoctest,pythonDocTest2,pythonSpaceError
+    \ contains=pythonEscape,@Spell,pythonSpaceError
 hi! link Folded Comment
 hi link pythonDocstring Comment
 
@@ -25,7 +65,7 @@ hi link pythonSelf Comment
 
 " Match words before '.' as being a namespace construct, so highlight them as
 " such.
-syn match pythonClass /\h\+\./me=e-1
+syn match pythonClass /\h\+\./me=e-1 containedin=pythonDecoratorName
 hi link pythonClass Namespace
 " Make things which lexically look like a function call get coloured in the
 " correct colours.
@@ -44,6 +84,15 @@ hi link pythonYieldFrom pythonStatement
 " than the default 'Statement'.
 syn keyword Constant None
 syn keyword Boolean True False
+
+" Messy exception matching.
+syn match pythonExceptions #\v<\h\w*(Error|Exception)># display
+    \ containedin=pythonIncludeLine
+
+syn match pythonOperator
+    \ #\v[^\+\*\-/\%]([\+\*\-/\%]|\*\*|//)[^\+\*\-/\%]#me=e-1,ms=s+1
+hi link pythonOperator Operator
+hi link pythonDecorator Operator
 
 " Define the folding function for the docstrings.
 if !exists('*PythonDocstringFoldText')
