@@ -1,3 +1,12 @@
+# Available hooks:
+#   bashrc-hook-init.bash: Run before (almost) anything else.
+#   bashrc-hook-environment-variables.bash: After the environment is created.
+#   bashrc-hook-final.bash: The last thing before control is passed to the user.
+# 
+# If these files exist in the in the $bash_files_dir (=$HOME/.bash_files), then
+# they will be sourced at the relevant time in the rc file.  These can be used
+# for machine-specific hooks and need not be committed to source control.
+
 # Do nothing if bash is not running interactively.
 reset_extglob=`shopt -p extglob`
 shopt -s extglob
@@ -24,16 +33,6 @@ function _bashrc_error_code {
     if [ "${code}" -ne 0 ]; then
         printf "\n(${code})"
     fi
-}
-
-# Print a string representing the current working directory.
-function _bashrc_ps1_pwd {
-    printf "[${PWD/#$HOME/~}]"
-}
-
-# Get the length of the string representing the current directory in the PS1.
-function _bashrc_ps1_pwd_length {
-    _bashrc_ps1_pwd | wc -c
 }
 
 # Directory to store additional bash files sourced in this file and other
@@ -117,17 +116,75 @@ else
     ps1_username=$ps1_magenta
 fi
 
+if [[ -z $bashrc_ps1_line_length ]]; then
+    bashrc_ps1_line_length=80
+fi
+if [[ -z $bashrc_ps1_single_length ]]; then
+    bashrc_ps1_single_length=50
+fi
+
+# Print the relevant parts of the pre-prompt to the screen in a desired order.
+function _bashrc_ps1_preprompt {
+    declare -i cur_len=0
+    declare -i line_len=0
+    declare -a parts=("`_bashrc_ps1_pwd`"
+                      "`_bashrc_ps1_conda`"
+                      "`_bashrc_ps1_git`")
+    declare -a colours=("${sol_yellow}" "${sol_violet}" "${sol_green}")
+    local pre
+    local post
+    for i in `seq 0 $((${#parts[@]} - 1))`; do
+        cur_len=${#parts[$i]}
+        pre=''
+        post=''
+        if [[ $cur_len -eq 0 ]]; then
+            continue
+        elif [[ $cur_len -gt $bashrc_ps1_single_length ]]; then
+            if [[ $line_len -ne 0 ]]; then
+                pre='\n'
+            fi
+            post='\n'
+            line_len=0
+        elif [[ $line_len -eq 0 ]]; then
+            line_len=$cur_len
+        elif [[ $(($line_len + $cur_len)) -gt $bashrc_ps1_line_length ]]; then
+            pre='\n'
+            line_len=$cur_len
+        else
+            pre=' '
+            line_len=$((1 + $line_len + $cur_len))
+        fi
+        echo -en "$pre"
+        echo -en '\e['"${colours[$i]}m${parts[$i]}"
+        echo -en '\e[0m'
+        echo -en "$post"
+    done
+    echo ""
+}
+
+# Print a string representing the current working directory.
+function _bashrc_ps1_pwd {
+    printf "[${PWD/#$HOME/\~}]"
+}
+
+# Print a string showing the conda status.
+function _bashrc_ps1_conda {
+    if [[ -n "$CONDA_DEFAULT_ENV" ]]; then
+        printf "($CONDA_DEFAULT_ENV)";
+    fi
+}
+
+# Print a string showing the git status.
+function _bashrc_ps1_git {
+    if [ -e "${bash_files_dir}/git-prompt.sh" ]; then
+        __git_ps1 '(%s)'
+    fi
+}
+
 # Default prompt format.
 PS1=${ps1_reset}
-PS1+=${ps1_red}'`_bashrc_error_code`\n'
-PS1+=${ps1_yellow}'`if [ $(_bashrc_ps1_pwd_length) -le 100 ]; \
-                    then _bashrc_ps1_pwd; fi;`'${ps1_reset}
-PS1+='`if [ -n "$CONDA_DEFAULT_ENV" ]; '
-PS1+='then printf "'${ps1_violet}' ($CONDA_DEFAULT_ENV)"; fi;`'${ps1_reset}
-if [ -e "${bash_files_dir}/git-prompt.sh" ]; then
-    PS1+=${ps1_green}' `__git_ps1 "(%s)"`'
-fi
-PS1+='\n'
+PS1+=${ps1_red}'`_bashrc_error_code`\n'${ps1_reset}
+PS1+='`_bashrc_ps1_preprompt`\n'
 PS1+=${ps1_username}'\u'${ps1_yellow}'@'
 PS1+=${ps1_blue}'\h'${ps1_username}'\$'
 PS1+=${ps1_reset}' '
@@ -141,7 +198,8 @@ PS2+=${ps1_reset}' '
 export PS1 PS2
 
 # Source machine-specific code
-`_bashrc_source_if_exists "${bash_files_dir}/bashrc-hook-environment-variables.bash"`
+`_bashrc_source_if_exists \
+    "${bash_files_dir}/bashrc-hook-environment-variables.bash"`
 
 # Permanent aliases.
 alias ll='ls -l'
