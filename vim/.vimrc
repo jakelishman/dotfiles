@@ -150,6 +150,11 @@ autocmd BufNewFile,BufRead *.tex        set filetype=tex
 " message editor.
 autocmd BufNewFile,BufRead COMMIT_EDITMSG let &colorcolumn=73
 
+augroup csharp
+    autocmd BufNewFile,BufRead *.cs setl colorcolumn=121
+    autocmd BufNewFile,BufRead *.cs setl textwidth=120
+augroup END
+
 " Correct capital letter typos!
 command Q q
 command W w
