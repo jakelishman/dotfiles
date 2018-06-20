@@ -69,7 +69,7 @@ syn match pythonClass /\h\+\./me=e-1 containedin=pythonDecoratorName
 hi link pythonClass Namespace
 " Make things which lexically look like a function call get coloured in the
 " correct colours.
-syn match pythonFunction /\h\+(/me=e-1
+syn match pythonFunction /\h\w*(/me=e-1
 
 " Delete python 2-specific keywords from the pythonStatement group
 syn clear pythonStatement
