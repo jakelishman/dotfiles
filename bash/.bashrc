@@ -203,7 +203,7 @@ export PS1 PS2
 
 # Permanent aliases.
 alias ll='ls -l'
-alias mkdir='mkdir -p -v'
+alias mkdir='mkdir -p'
 
 alias glo='git log --oneline'
 alias gs='git status'
