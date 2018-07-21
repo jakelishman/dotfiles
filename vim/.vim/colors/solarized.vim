@@ -470,6 +470,7 @@ exe "hi! Type"           .s:fmt_none   .s:fg_yellow .s:bg_none
 "        Typedef         A typedef
 
 exe "hi! Special"        .s:fmt_none   .s:fg_orange    .s:bg_none
+exe "hi! Delimiter"      .s:fmt_none   .s:fg_green     .s:bg_none
 "       *Special         any special symbol
 "        SpecialChar     special character in a constant
 "        Tag             you can use CTRL-] on this
@@ -682,6 +683,10 @@ exe "hi! texMathZoneX"   . s:fg_yellow .s:bg_back   .s:fmt_none
 exe "hi! texMathMatcher" . s:fg_yellow .s:bg_back   .s:fmt_none
 exe "hi! texMathMatcher" . s:fg_yellow .s:bg_back   .s:fmt_none
 exe "hi! texRefLabel"    . s:fg_yellow .s:bg_back   .s:fmt_none
+
+execute "highlight! TeXMathMode"      . s:fmt_ital . s:fg_violet . s:bg_none
+execute "highlight! TeXMathConstant"  . s:fmt_ital . s:fg_cyan   . s:bg_none
+execute "highlight! TeXOption"        . s:fmt_ital . s:fg_yellow . s:bg_none
 "}}}
 " ruby highlighting "{{{
 " ---------------------------------------------------------------------
