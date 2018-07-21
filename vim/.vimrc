@@ -127,6 +127,7 @@ let g:vimtex_compiler_latexmk = {
 
 " Don't let vimtex autoindent things (it sucks at it).
 let g:vimtex_indent_enabled=0
+let g:latex_indent_enabled=0
 
 " Disable insert mode mappings.
 let g:vimtex_imaps_leader='¬'
@@ -144,7 +145,15 @@ map <C-n> :NERDTreeToggle<CR>
 
 " Set filetypes based on certain extensions
 autocmd BufNewFile,BufRead *.gnuplot    set filetype=gnuplot
-autocmd BufNewFile,BufRead *.tex        set filetype=tex
+
+augroup latex
+    autocmd BufNewFile,BufRead *.tex setlocal filetype=tex
+    autocmd BufNewFile,BufRead *.tex filetype indent off
+    autocmd BufNewFile,BufRead *.tex setlocal noautoindent
+    autocmd BufNewFile,BufRead *.tex setlocal nosmartindent
+    autocmd BufNewFile,BufRead *.tex setlocal indentexpr=""
+augroup END
+
 
 " Set the colour column to be at the edge of the textwidth for the git commit
 " message editor.
