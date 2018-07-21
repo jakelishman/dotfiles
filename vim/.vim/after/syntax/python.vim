@@ -3,7 +3,7 @@ syn clear pythonInclude
 syn keyword pythonIncludeStatement as from import contained
 syn match pythonIncludeModule
     \ +\.*\(\h\w*\(\.\h\w*\)*\)\=+ contained
-syn match pythonIncludeLine /^\s*\(import\|from\).*$/
+syn match pythonIncludeLine /^\s*\(import\|from\)\>.*$/
     \ contains=pythonIncludeStatement,pythonIncludeModule
 hi link pythonIncludeStatement Operator
 hi link pythonIncludeModule Namespace
