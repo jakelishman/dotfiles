@@ -163,9 +163,15 @@ function _bashrc_ps1_preprompt {
 }
 
 # Print a string representing the current working directory.
-function _bashrc_ps1_pwd {
-    printf "[${PWD/#$HOME/\~}]"
-}
+if [[ (${BASH_VERSINFO[0]} -ge "4") && (${BASH_VERSINFO[1]} -ge 3) ]]; then
+    function _bashrc_ps1_pwd {
+        printf "[${PWD/#$HOME/\~}]"
+    }
+else
+    function _bashrc_ps1_pwd {
+        printf "[${PWD/#$HOME/~}]"
+    }
+fi
 
 # Print a string showing the conda status.
 function _bashrc_ps1_conda {
