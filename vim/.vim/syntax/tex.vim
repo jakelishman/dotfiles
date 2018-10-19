@@ -24,13 +24,14 @@ let s:normal_contains = join(s:normal_contains_list, ',')
 syntax iskeyword \,*,a-z,A-Z
 
 " Super generic catch-alls.
-syntax match TeXCommandWord   '\v\\[a-zA-Z]+\*?'
 syntax match TeXCommandSymbol '\v\\[a-zA-Z0-9]'
+syntax match TeXCommandWord   '\v\\[a-zA-Z]+\*?'
+syntax match TeXCommandAtMacro '\v\\[a-zA-Z]*\@[a-zA-Z@]*\*?'
 syntax match TeXAccent #\v\\[`'"~=.].#
 syntax match TeXAccent #\v\\[bcdktuvH]\s+\S#
 syntax match TeXComment #\v\%.*$#
 
-syntax match TeXImport #\v\\(documentclass|usepackage)#
+syntax match TeXImport #\v\\(documentclass|usepackage)>#
     \ skipwhite nextgroup=TeXImportOptions,TeXImportPackages
 syntax region TeXImportOptions matchgroup=TeXGroupDelimiter start='\[' end=']'
     \ transparent
@@ -46,7 +47,7 @@ syntax match TeXImportEquals '=' contained
 syntax match TeXImportOptionValue #\v[a-zA-Z\&0-9]+# contained
 syntax match TeXImportPackage #\v\w+# contained
 
-syntax match TeXBeginEnd #\v\\(begin|end)#
+syntax match TeXBeginEnd #\v\\(begin|end)>#
     \ skipwhite nextgroup=TeXBeginEndGroup
 execute 'syntax region TeXBeginEndGroup matchgroup=TeXBeginEndGroupDelimiter'
     \ . ' start=#\v\{# skip=#\\\\|\\\}# end=#\v\}#'
@@ -89,15 +90,15 @@ let s:letters = [
     \ 'ell', 'hbar', 'imath', 'jmath', 'infty',
 \ ]
 execute 'syntax match TeXMathLetter'
-    \ . ' #\v\\(' . join(s:letters, '|') . ')[a-zA-Z]#me=e-1'
+    \ . ' #\v\\(' . join(s:letters, '|') . ')[^a-zA-Z]#me=e-1'
 execute 'syntax match TeXMathLetter'
     \ . ' #\v\\(' . join(s:letters, '|') . ')$#'
 
 syntax match TeXAlignment '&'
 
-syntax match TeXMacroDefinition #\v\\(def|let)[a-zA-Z]#me=e-1
-syntax match TeXMacroDefinition #\v\\(re)?newcommand\*?[a-zA-Z]#me=e-1
-syntax match TeXMacroDefinition #\v\\newlength[a-zA-Z]#me=e-1
+syntax match TeXMacroDefinition #\v\\(def|let)[^a-zA-Z]#me=e-1
+syntax match TeXMacroDefinition #\v\\(re)?newcommand\*?[^[a-zA-Z]#me=e-1
+syntax match TeXMacroDefinition #\v\\newlength[^a-zA-Z]#me=e-1
 syntax match TeXMacroArgument '\v#{1,3}\d'
 
 syntax region TeXGroup matchgroup=TeXGroupDelimiter
@@ -105,6 +106,9 @@ syntax region TeXGroup matchgroup=TeXGroupDelimiter
     \ transparent
 syntax region TeXGroup matchgroup=TeXGroupDelimiter
     \ start=#\v\[# skip=#\\\\|\\\]# end=#\v\]#
+    \ transparent
+syntax region TeXGroup matchgroup=TeXGroupDelimiter
+    \ start=#\v\\begingroup># skip=#\\\\# end=#\v\\endgroup>#
     \ transparent
 
 """" Math mode highlights
@@ -132,8 +136,8 @@ execute 'syntax region TeXMathInline'
 
 let s:math_environments = [
     \ 'equation', 'equation\*', 'align', 'align\*', 'multline', 'multline\*',
-    \ 'gather', 'gather\*', 'alignat', 'alignat\*', 'flalign', 'flagin\*',
-    \ 'split', 'eqnarray', 'eqnarray*'
+    \ 'gather', 'gather\*', 'alignat', 'alignat\*', 'flalign', 'flalign\*',
+    \ 'split', 'eqnarray', 'eqnarray\*'
 \ ]
 for environment in s:math_environments
     call s:make_math_environment(environment)
@@ -141,9 +145,9 @@ endfor
 call s:make_math_command('#\v\\\[#', '#\v\\\]#')
 call s:make_math_command('#\v\$\$#', '#\v\$\$#')
 
-syntax match TeXSuperSubscript #\v[_\]# contained
+syntax match TeXSuperSubscript #\v[_^]# contained
     \ skipwhite nextgroup=TeXSuperSubscriptSingle,TeXSuperSubscriptContents
-syntax match TeXSuperSubscriptSingle #\v[\{]# contained
+syntax match TeXSuperSubscriptSingle #\v[^\{\\]# contained
 execute 'syntax region TeXSuperSubscriptContents'
     \ . ' matchgroup=TeXSuperSubscriptSingle'
     \ . ' start=#\v\{# skip=#\\\\|\\\}# end=#\v\}#'
@@ -163,7 +167,7 @@ execute 'syntax region TeXMathInnerText'
 let s:normal_text_modifiers_list = [
     \ 'textit', 'textbf', 'textsc', 'texttt',
     \ 'textsuperscript', 'textsubscript', 'color',
-    \ 'emph',
+    \ 'emph'
 \ ]
 execute 'syntax region TeXTextModified'
     \ . ' matchgroup=TeXTextType'
@@ -175,7 +179,7 @@ execute 'syntax region TeXTextModified'
 syntax match TeXMainMatterDelimiter #\v\\(begin|end)\{document\}#
 
 syntax match TeXReferenceCommand
-    \ #\v\\(label|[cC]?ref|cite[tp]?\*?)[a-zA-Z]#me=e-1
+    \ #\v\\(label|[cC]?ref|cite[tp]?\*?)[^a-zA-Z]#me=e-1
     \ skipwhite nextgroup=TeXReferenceGroup
 syntax region TeXReferenceGroup matchgroup=TeXReferenceDelimiter
     \ start=#\v\{# skip=#\\\\|\\\}# end=#\v\}#
@@ -184,13 +188,13 @@ syntax region TeXReferenceGroup matchgroup=TeXReferenceDelimiter
 syntax match TeXReference #\v[a-zA-Z\-0-9]+# contained
 syntax match TeXReferenceType #\v[a-zA-Z]*:# nextgroup=TeXReference contained
 
-syntax match TeXSizeModifier #\v\\[bB]igg?[a-zA-Z]#me=e-1
 syntax match TeXSizeModifier
-    \ #\v\\[bB]igg?[rl]([\(\)\[\]\|]|\\\{|\\\}|\\[rl]angle)#
+    \ #\v\\([bB]igg?[rl]?|left|right)([\(\)\[\]\|]|\\\{|\\\}|\\[rl]angle|\.)#
 
 " Set up highlighting.
 highlight! link TeXCommandWord          Function
 highlight! link TeXCommandSymbol        Special
+highlight! link TeXCommandAtMacro       Special
 highlight! link TeXAccent               Special
 highlight! link TeXComment              Comment
 highlight! link TeXLength               Number

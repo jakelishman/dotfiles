@@ -47,11 +47,11 @@ hi link pythonString String
 hi link pythonByteString String
 
 " Match a python docstring as as a foldable comment region.
-syn region pythonDocstring start=+^\s*[uU]\?[rR]\?"""+ end=+"""+
+syn region pythonDocstring start=+^\s*[uU]\?[rR]\?[fF]\?"""+ end=+"""+
     \ fold
     \ keepend excludenl
     \ contains=pythonEscape,@Spell,pythonSpaceError
-syn region pythonDocstring start=+^\s*[uU]\?[rR]\?'''+ end=+'''+
+syn region pythonDocstring start=+^\s*[uU]\?[rR]\?[fF]\?'''+ end=+'''+
     \ fold
     \ keepend excludenl
     \ contains=pythonEscape,@Spell,pythonSpaceError
@@ -65,7 +65,7 @@ hi link pythonSelf Comment
 
 " Match words before '.' as being a namespace construct, so highlight them as
 " such.
-syn match pythonClass /\h\+\./me=e-1 containedin=pythonDecoratorName
+syn match pythonClass /\h\w*\./me=e-1 containedin=pythonDecoratorName
 hi link pythonClass Namespace
 " Make things which lexically look like a function call get coloured in the
 " correct colours.
