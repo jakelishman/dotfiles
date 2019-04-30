@@ -10,7 +10,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 " Syntax checker integrations (rust, latex, C)
-Plugin 'scrooloose/syntastic'
+Plugin 'w0rp/ale'
 
 " NERDTree file browser (and git symbols)
 Plugin 'scrooloose/nerdtree'
@@ -136,11 +136,6 @@ let g:vimtex_imaps_enabled=0
 
 " Make vimtex recognise end-of-line comments when using 'gq'.
 let g:vimtex_format_enabled=1
-
-" Disable lacheck from checking latex documents.
-let g:syntastic_tex_checkers=[]
-let g:syntastic_python_checkers=[]
-let g:syntastic_html_checkers=[]
 
 " Map ^n to toggle the NERDTree browser.
 map <C-n> :NERDTreeToggle<CR>
