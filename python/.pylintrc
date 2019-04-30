@@ -1,0 +1,14 @@
+[MESSAGES CONTROL]
+
+disable=invalid-name,
+        wrong-import-order,
+        too-many-arguments,
+        too-many-locals,
+        too-many-instance-attributes,
+        too-few-public-methods,
+        bad-continuation,
+        bad-whitespace,
+        missing-docstring,
+        wrong-import-position,
+        multiple-statements,
+        redefined-outer-name,
