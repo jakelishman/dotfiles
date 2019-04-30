@@ -163,7 +163,8 @@ function _bashrc_ps1_preprompt {
 }
 
 # Print a string representing the current working directory.
-if [[ (${BASH_VERSINFO[0]} -ge "4") && (${BASH_VERSINFO[1]} -ge 3) ]]; then
+if [[ (${BASH_VERSINFO[0]} -ge "5")\
+      || ((${BASH_VERSINFO[0]} -eq "4") && (${BASH_VERSINFO[1]} -ge 3)) ]]; then
     function _bashrc_ps1_pwd {
         printf "[${PWD/#$HOME/\~}]"
     }
