@@ -8,6 +8,8 @@ syn match pythonIncludeLine /^\s*\(import\|from\)\>.*$/
 hi link pythonIncludeStatement Operator
 hi link pythonIncludeModule Namespace
 
+syn match pythonNumber #\v<(([0-9][0-9_]*)?\.)?[0-9][0-9_]*([eE][+-][0-9][0-9_]*)?#
+
 " Make string highlighting accurate for how Python 3 is interpreted.
 syn clear pythonEscape pythonString pythonRawString
 syn match pythonEscape +\\$+
