@@ -658,6 +658,10 @@ hi! link gitcommitUnmergedArrow  gitcommitUnmergedFile
 "exe "hi! gitcommitArrow"
 "exe "hi! gitcommitOverflow"
 "exe "hi! gitcommitBlank"
+exe "hi! GitGutterAdd"          .s:fmt_none     .s:fg_green     .s:bg_base02
+exe "hi! GitGutterChange"       .s:fmt_none     .s:fg_yellow    .s:bg_base02
+exe "hi! GitGutterDelete"       .s:fmt_none     .s:fg_orange    .s:bg_base02
+exe "hi! GitGutterChangeDelete" .s:fmt_none     .s:fg_orange    .s:bg_base02
 " }}}
 " html highlighting "{{{
 " ---------------------------------------------------------------------
