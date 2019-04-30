@@ -24,12 +24,13 @@ let s:normal_contains = join(s:normal_contains_list, ',')
 syntax iskeyword \,*,a-z,A-Z
 
 " Super generic catch-alls.
-syntax match TeXCommandSymbol '\v\\[a-zA-Z0-9]'
+syntax match TeXCommandSymbol '\v\\[a-zA-Z0-9#%$]'
 syntax match TeXCommandWord   '\v\\[a-zA-Z]+\*?'
 syntax match TeXCommandAtMacro '\v\\[a-zA-Z]*\@[a-zA-Z@]*\*?'
 syntax match TeXAccent #\v\\[`'"~=.].#
 syntax match TeXAccent #\v\\[bcdktuvH]\s+\S#
 syntax match TeXComment #\v\%.*$#
+syntax match TeXCommandSymbol '\v\\[\{\}]'
 
 syntax match TeXImport #\v\\(documentclass|usepackage)>#
     \ skipwhite nextgroup=TeXImportOptions,TeXImportPackages
@@ -101,12 +102,15 @@ syntax match TeXMacroDefinition #\v\\(re)?newcommand\*?[^[a-zA-Z]#me=e-1
 syntax match TeXMacroDefinition #\v\\newlength[^a-zA-Z]#me=e-1
 syntax match TeXMacroArgument '\v#{1,3}\d'
 
+syntax match TeXSizeModifier
+    \ #\v\\([bB]igg?[rl]?|left|right)([|()]|\[|\]|\\\{|\\\}|\\[rl]angle|\.)#
+
 syntax region TeXGroup matchgroup=TeXGroupDelimiter
     \ start=#\v\{# skip=#\\\\|\\\}# end=#\v\}#
     \ transparent
 syntax region TeXGroup matchgroup=TeXGroupDelimiter
     \ start=#\v\[# skip=#\\\\|\\\]# end=#\v\]#
-    \ transparent
+    \ transparent keepend
 syntax region TeXGroup matchgroup=TeXGroupDelimiter
     \ start=#\v\\begingroup># skip=#\\\\# end=#\v\\endgroup>#
     \ transparent
@@ -179,7 +183,7 @@ execute 'syntax region TeXTextModified'
 syntax match TeXMainMatterDelimiter #\v\\(begin|end)\{document\}#
 
 syntax match TeXReferenceCommand
-    \ #\v\\(label|[cC]?ref|cite[tp]?\*?)[^a-zA-Z]#me=e-1
+    \ #\v\\(label|[cC]?ref|cite[tp]?\*?)>#
     \ skipwhite nextgroup=TeXReferenceGroup
 syntax region TeXReferenceGroup matchgroup=TeXReferenceDelimiter
     \ start=#\v\{# skip=#\\\\|\\\}# end=#\v\}#
@@ -187,9 +191,6 @@ syntax region TeXReferenceGroup matchgroup=TeXReferenceDelimiter
     \ contains=TeXReference,TeXReferenceType
 syntax match TeXReference #\v[a-zA-Z\-0-9]+# contained
 syntax match TeXReferenceType #\v[a-zA-Z]*:# nextgroup=TeXReference contained
-
-syntax match TeXSizeModifier
-    \ #\v\\([bB]igg?[rl]?|left|right)([\(\)\[\]\|]|\\\{|\\\}|\\[rl]angle|\.)#
 
 " Set up highlighting.
 highlight! link TeXCommandWord          Function
