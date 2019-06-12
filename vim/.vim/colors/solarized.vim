@@ -660,8 +660,8 @@ hi! link gitcommitUnmergedArrow  gitcommitUnmergedFile
 "exe "hi! gitcommitBlank"
 exe "hi! GitGutterAdd"          .s:fmt_none     .s:fg_green     .s:bg_base02
 exe "hi! GitGutterChange"       .s:fmt_none     .s:fg_yellow    .s:bg_base02
-exe "hi! GitGutterDelete"       .s:fmt_none     .s:fg_orange    .s:bg_base02
-exe "hi! GitGutterChangeDelete" .s:fmt_none     .s:fg_orange    .s:bg_base02
+exe "hi! GitGutterDelete"       .s:fmt_none     .s:fg_yellow    .s:bg_base02
+exe "hi! GitGutterChangeDelete" .s:fmt_none     .s:fg_yellow    .s:bg_base02
 " }}}
 " html highlighting "{{{
 " ---------------------------------------------------------------------
@@ -919,6 +919,8 @@ augroup END
 " }}}
 " Miscellaneous additional highlightings {{{
 exe "hi! ClassSelfReference" . s:fg_violet . s:bg_back . s:fmt_ital
+exe "hi! ALEErrorSign"       . s:fg_red    . s:bg_base02       . s:fmt_none
+exe "hi! ALEWarningSign"     . s:fg_violet . s:bg_base02       . s:fmt_none
 " }}}
 " Menus "{{{
 " ---------------------------------------------------------------------

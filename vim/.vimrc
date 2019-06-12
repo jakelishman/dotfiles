@@ -125,6 +125,9 @@ let g:vimtex_compiler_latexmk = {
     \ ],
 \}
 
+" I have my own tex.vim syntax file, so vimtex's additions don't work.
+let g:vimtex_syntax_enabled=0
+
 " Don't let vimtex autoindent things (it sucks at it).
 let g:vimtex_indent_enabled=0
 let g:latex_indent_enabled=0
@@ -138,6 +141,17 @@ let g:vimtex_format_enabled=1
 
 " Map ^n to toggle the NERDTree browser.
 map <C-n> :NERDTreeToggle<CR>
+
+let g:ale_sign_column_always = 1
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '──'
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_linters = {
+\   'sh': ['shellcheck'],
+\}
+augroup ALE
+    autocmd User ALELintPost GitGutter
+augroup END
 
 " Set filetypes based on certain extensions
 autocmd BufNewFile,BufRead *.gnuplot    set filetype=gnuplot
