@@ -11,3 +11,5 @@
 [color]
 	ui = auto
 	diff = true
+[diff]
+	tool = vimdiff
