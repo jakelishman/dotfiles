@@ -604,10 +604,10 @@ exe "hi! vimSynType"        .s:fmt_none    .s:fg_cyan   .s:bg_none
 " ---------------------------------------------------------------------
 "hi! link diffAdded Statement
 "hi! link diffLine Identifier
-exe "hi! diffAdd"    .s:fmt_none .s:fg_none . s:bg_base2
-exe "hi! diffRemove" .s:fmt_none .s:fg_none . s:bg_base2
-exe "hi! diffChange" .s:fmt_none .s:fg_none . s:bg_base2
-exe "hi! diffText" .s:fmt_none .s:fg_magenta . s:bg_base2
+exe "hi! diffAdd"    .s:fmt_none .s:fg_none . s:bg_base02
+exe "hi! diffRemove" .s:fmt_none .s:fg_none . s:bg_base02
+exe "hi! diffChange" .s:fmt_none .s:fg_none . s:bg_base02
+exe "hi! diffText"   .s:fmt_undr .s:fg_none . s:bg_base02
 "}}}
 " git & gitcommit highlighting "{{{
 "git
