@@ -8,7 +8,7 @@
 # for machine-specific hooks and need not be committed to source control.
 
 # Do nothing if bash is not running interactively.
-reset_extglob=`shopt -p extglob`
+reset_extglob=$(shopt -p extglob)
 shopt -s extglob
 case "$-" in
     !(*i*) ) return ;;
@@ -22,8 +22,8 @@ unset reset_extglob
 #   `__source if exists "file-to-source.sh"`
 # i.e. with surrounding backticks.
 function _bashrc_source_if_exists { echo eval "\
-    if [ -e "$1" ]; then \
-        source "$1" ; \
+    if [ -e \"$1\" ]; then \
+        source \"$1\" ; \
     fi";
 }
 
@@ -31,7 +31,7 @@ function _bashrc_source_if_exists { echo eval "\
 function _bashrc_error_code {
     code=$?
     if [ "${code}" -ne 0 ]; then
-        printf "\n(${code})"
+        printf "\n(%s)" ${code}
     fi
 }
 
@@ -40,7 +40,7 @@ function _bashrc_error_code {
 bash_files_dir="$HOME/.bash_files"
 
 # Get the initialisation hook.
-`_bashrc_source_if_exists "${bash_files_dir}/bashrc-hook-init.bash"`
+$(_bashrc_source_if_exists "${bash_files_dir}/bashrc-hook-init.bash")
 
 ## Variable setup
 
@@ -93,8 +93,8 @@ LS_COLORS+=":or=${sol_red}"
 export LS_COLORS
 
 # Functions for better git integration with bash.
-`_bashrc_source_if_exists "${bash_files_dir}/git-prompt.sh"`
-`_bashrc_source_if_exists "${bash_files_dir}/git-completion.bash"`
+$(_bashrc_source_if_exists "${bash_files_dir}/git-prompt.sh")
+$(_bashrc_source_if_exists "${bash_files_dir}/git-completion.bash")
 
 # Make the git prompt show an asterisk if the index is dirty.
 export GIT_PS1_SHOWDIRTYSTATE=1 GIT_SSH
@@ -127,13 +127,13 @@ fi
 function _bashrc_ps1_preprompt {
     declare -i cur_len=0
     declare -i line_len=0
-    declare -a parts=("`_bashrc_ps1_pwd`"
-                      "`_bashrc_ps1_conda`"
-                      "`_bashrc_ps1_git`")
+    declare -a parts=("$(_bashrc_ps1_pwd)"
+                      "$(_bashrc_ps1_conda)"
+                      "$(_bashrc_ps1_git)")
     declare -a colours=("${sol_yellow}" "${sol_violet}" "${sol_green}")
     local pre
     local post
-    for i in `seq 0 $((${#parts[@]} - 1))`; do
+    for i in $(seq 0 $((${#parts[@]} - 1))); do
         cur_len=${#parts[$i]}
         pre=''
         post=''
@@ -147,12 +147,12 @@ function _bashrc_ps1_preprompt {
             line_len=0
         elif [[ $line_len -eq 0 ]]; then
             line_len=$cur_len
-        elif [[ $(($line_len + $cur_len)) -gt $bashrc_ps1_line_length ]]; then
+        elif [[ $((line_len + cur_len)) -gt $bashrc_ps1_line_length ]]; then
             pre='\n'
             line_len=$cur_len
         else
             pre=' '
-            line_len=$((1 + $line_len + $cur_len))
+            line_len=$((1 + line_len + cur_len))
         fi
         echo -en "$pre"
         echo -en '\e['"${colours[$i]}m${parts[$i]}"
@@ -166,18 +166,18 @@ function _bashrc_ps1_preprompt {
 if [[ (${BASH_VERSINFO[0]} -ge "5")\
       || ((${BASH_VERSINFO[0]} -eq "4") && (${BASH_VERSINFO[1]} -ge 3)) ]]; then
     function _bashrc_ps1_pwd {
-        printf "[${PWD/#$HOME/\~}]"
+        echo "[${PWD/#$HOME/\~}]"
     }
 else
     function _bashrc_ps1_pwd {
-        printf "[${PWD/#$HOME/~}]"
+        echo "[${PWD/#$HOME/~}]"
     }
 fi
 
 # Print a string showing the conda status.
 function _bashrc_ps1_conda {
     if [[ -n "$CONDA_DEFAULT_ENV" ]]; then
-        printf "($CONDA_DEFAULT_ENV)";
+        echo "($CONDA_DEFAULT_ENV)";
     fi
 }
 
@@ -205,35 +205,29 @@ PS2+=${ps1_reset}' '
 export PS1 PS2
 
 # Source machine-specific code
-`_bashrc_source_if_exists \
-    "${bash_files_dir}/bashrc-hook-environment-variables.bash"`
+$(_bashrc_source_if_exists \
+    "${bash_files_dir}/bashrc-hook-environment-variables.bash")
 
 # Permanent aliases.
 alias ll='ls -l'
 alias mkdir='mkdir -p'
 
-alias glo='git log --oneline'
-alias gs='git status'
-
 # Alias ls and grep to use colours correctly if the version in the path works
 # with the colouring option.  BSD (Mac) ls doesn't recognise the --color=auto
 # option, but the Homebrew GNU ls does, so this colour test comes after the
 # machine-specific setup which may alter the PATH.
-ls --color=auto &>/dev/null
 ls_add_options=''
-if [ "$?" -eq "0" ]; then
+if ls --color=auto &>/dev/null; then
     ls_add_options+=' --color=auto'
 fi
-ls --group-directories-first &>/dev/null
-if [ "$?" -eq "0" ]; then
+if ls --group-directories-first &>/dev/null; then
     ls_add_options+=' --group-directories-first'
 fi
-alias ls="ls${ls_add_options}"
+alias ls='ls${ls_add_options}'
 
-echo | grep --color=auto "" &>/dev/null
-if [ "$?" -eq "0" ]; then
+if echo | grep --color=auto "" &>/dev/null; then
     alias grep='grep --color=auto'
 fi
 
 # Source any final bash hooks.
-`_bashrc_source_if_exists "${bash_files_dir}/bashrc-hook-final.bash"`
+$(_bashrc_source_if_exists "${bash_files_dir}/bashrc-hook-final.bash")
