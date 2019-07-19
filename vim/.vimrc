@@ -148,6 +148,7 @@ let g:ale_sign_warning = '──'
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {
 \   'sh': ['shellcheck'],
+\   'tex': [],
 \}
 augroup ALE
     autocmd User ALELintPost GitGutter
