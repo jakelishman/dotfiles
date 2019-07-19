@@ -1,22 +1,22 @@
 from pygments.style import Style
 from pygments import token
 
-base03 = '#ansidarkgray'
-base02 = '#ansiblack'
-base01 = '#ansigreen'
-base00 = '#ansiyellow'
-base0 = '#ansiblue'
-base1 = '#ansiturquoise'
-base2 = '#ansilightgray'
-base3 = '#ansiwhite'
-yellow = '#ansibrown'
-orange = '#ansired'
-red = '#ansidarkred'
-magenta = '#ansipurple'
-violet = '#ansifuchsia'
-blue = '#ansidarkblue'
-cyan = '#ansiteal'
-green = '#ansidarkgreen'
+base03  = 'ansiblack     bold'
+base02  = 'ansiblack     nobold'
+base01  = 'ansigreen     bold'
+base00  = 'ansiyellow    bold'
+base0   = 'ansiblue      bold'
+base1   = 'ansicyan      bold'
+base2   = 'ansiwhite     nobold'
+base3   = 'ansiwhite     bold'
+yellow  = 'ansiyellow    nobold'
+orange  = 'ansired       bold'
+red     = 'ansired       nobold'
+magenta = 'ansimagenta   nobold'
+violet  = 'ansimagenta   bold'
+blue    = 'ansiblue      nobold'
+cyan    = 'ansicyan      nobold'
+green   = 'ansigreen     nobold'
 
 class SolarizedStyle(Style):
     background_color = base03
