@@ -190,8 +190,8 @@ function _bashrc_ps1_git {
 
 # Default prompt format.
 PS1=${ps1_reset}
-PS1+=${ps1_red}'`_bashrc_error_code`\n'${ps1_reset}
-PS1+='`_bashrc_ps1_preprompt`\n'
+PS1+=${ps1_red}'$(_bashrc_error_code)\n'${ps1_reset}
+PS1+='$(_bashrc_ps1_preprompt)\n'
 PS1+=${ps1_username}'\u'${ps1_yellow}'@'
 PS1+=${ps1_blue}'\h'${ps1_username}'\$'
 PS1+=${ps1_reset}' '
