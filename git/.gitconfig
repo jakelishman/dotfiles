@@ -18,3 +18,9 @@
 	gpgsign = true
 [pull]
 	ff = only
+[color "diff"]
+	new = green
+[color "status"]
+	updated = green
+[color "branch"]
+	current = green
