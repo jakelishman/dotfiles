@@ -82,6 +82,10 @@ set scrolloff=4
 set textwidth=80
 set colorcolumn=81
 
+"" Don't allow search to highlight or jump around as we type.
+set nohlsearch
+set noincsearch
+
 "" Remove both audible and visual bells
 "" These must be set in _gvimrc too
 set vb
