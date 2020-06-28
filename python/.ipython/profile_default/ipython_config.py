@@ -27,7 +27,7 @@ class SolarizedStyle(Style):
         #token.Keyword.Namespace: magenta,
         #token.Keyword.Pseudo
         #token.Keyword.Reserved: blue,
-        #token.Keyword.Type: orange,
+        token.Keyword.Type: yellow,
 
         #token.Name
         token.Name.Attribute: base0,
@@ -107,3 +107,5 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
         token.Token.OutPrompt: base01 + ' italic',
         token.Token.OutPromptNum: base01 + ' italic',
     }
+c.TerminalInteractiveShell.history_length =\
+    c.TerminalInteractiveShell.history_load_length = 100_000
