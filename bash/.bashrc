@@ -64,8 +64,10 @@ sol_green='32'
 
 # If we're running iTerm2, then we can safely insert the sequence to enable
 # italics into colour sequences.
-if [ "$TERM_PROGRAM" = "iTerm.app" ]; then
+if [[ "$TERM_PROGRAM" = "iTerm.app" ]]; then
     italics="3;"
+elif [[ -n "$ConEmuBuild" ]]; then
+    italics="42;"
 else
     italics=""
 fi
