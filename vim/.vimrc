@@ -167,6 +167,8 @@ augroup ALE
     autocmd User ALELintPost GitGutter
 augroup END
 
+let g:rst_style = 1
+
 " Set filetypes based on certain extensions
 autocmd BufNewFile,BufRead *.gnuplot    set filetype=gnuplot
 
