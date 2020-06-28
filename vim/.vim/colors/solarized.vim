@@ -443,6 +443,7 @@ exe "hi! Constant"       .s:fmt_none   .s:fg_cyan   .s:bg_none
 exe "hi! Identifier"     s:fmt_none   .s:fg_base0   .s:bg_none
 exe "hi! Function"       s:fmt_none   .s:fg_blue    .s:bg_none
 exe "hi! Namespace"      s:fmt_none   .s:fg_magenta .s:bg_none
+exe "hi! NamespaceAlt"   s:fmt_none   .s:fg_violet  .s:bg_none
 "       *Identifier      any variable name
 "        Function        function name (also: methods for classes)
 "        Namespace       namespace name
