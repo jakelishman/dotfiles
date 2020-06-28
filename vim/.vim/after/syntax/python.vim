@@ -91,10 +91,13 @@ syn keyword Boolean True False
 syn match pythonExceptions #\v<\h\w*(Error|Exception)># display
     \ containedin=pythonIncludeLine
 
+syn match pythonComparison /\v([=<>]\=?|!\=)/
+
 syn match pythonOperator
     \ #\v[^\+\*\-/\%]([\+\*\-/\%]|\*\*|//)[^\+\*\-/\%]#me=e-1,ms=s+1
 hi link pythonOperator Operator
 hi link pythonDecorator Operator
+hi link pythonComparison Operator
 
 " Define the folding function for the docstrings.
 if !exists('*PythonDocstringFoldText')
