@@ -1,6 +1,7 @@
 [user]
 	name = Jake Lishman
-	email = jakelishman@gmail.com
+	email = jake@binhbar.com
+	signingkey = 606B6DC90D4CABEF
 [core]
 	autocrlf = input
 	editor = vim
@@ -13,3 +14,7 @@
 	diff = true
 [diff]
 	tool = vimdiff
+[commit]
+	gpgsign = true
+[pull]
+	ff = only
