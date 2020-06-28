@@ -160,6 +160,8 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {
 \   'sh': ['shellcheck'],
 \   'tex': [],
+\   'python': ['pylint', 'pycodestyle'],
+\   'pyrex': ['cython'],
 \}
 augroup ALE
     autocmd User ALELintPost GitGutter
