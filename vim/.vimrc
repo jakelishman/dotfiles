@@ -105,7 +105,7 @@ set fillchars=stl:\ ,stlnc:_,vert:\│,fold:\ ,diff:\─
 
 "" Configure vimtex to do what we want.
 " Don't open the quickfix window if there are only warnings.
-let g:vimtex_quickfix_open_on_warning=0
+"let g:vimtex_quickfix_open_on_warning=0
 
 " Set latexmk compiler options
 " Puts build files (including the output) into './build' relative to the project
@@ -143,6 +143,16 @@ let g:vimtex_format_enabled=1
 " Map ^n to toggle the NERDTree browser.
 map <C-n> :NERDTreeToggle<CR>
 
+if !exists("*LongLineMode")
+    function LongLineMode()
+        setlocal tw=0
+        setlocal wrapmargin=0
+    endfunction
+endif
+if !exists(":LLM")
+    command LLM call LongLineMode()
+endif
+
 let g:ale_sign_column_always = 1
 let g:ale_sign_error = '>>'
 let g:ale_sign_warning = '──'
@@ -164,6 +174,7 @@ augroup latex
     autocmd BufNewFile,BufRead *.tex setlocal noautoindent
     autocmd BufNewFile,BufRead *.tex setlocal nosmartindent
     autocmd BufNewFile,BufRead *.tex setlocal indentexpr=""
+    autocmd BufNewFile,BufRead *.tex call LongLineMode()
 augroup END
 
 
