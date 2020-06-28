@@ -26,6 +26,7 @@ Plugin 'tpope/vim-surround'
 Plugin 'fsharp/vim-fsharp'
 Plugin 'lervag/vimtex'
 Plugin 'rust-lang/rust.vim'
+Plugin 'Vimjas/vim-python-pep8-indent'
 call vundle#end()
 
 " Set leader keys.
