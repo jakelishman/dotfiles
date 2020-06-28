@@ -183,7 +183,7 @@ execute 'syntax region TeXTextModified'
 syntax match TeXMainMatterDelimiter #\v\\(begin|end)\{document\}#
 
 syntax match TeXReferenceCommand
-    \ #\v\\(label|[cC]?ref|cite[tp]?\*?)>#
+    \ #\v\\(label|(eq|[cC])?ref|cite[tp]?\*?)>#
     \ skipwhite nextgroup=TeXReferenceGroup
 syntax region TeXReferenceGroup matchgroup=TeXReferenceDelimiter
     \ start=#\v\{# skip=#\\\\|\\\}# end=#\v\}#
