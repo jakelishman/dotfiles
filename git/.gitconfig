@@ -24,3 +24,5 @@
 	updated = green
 [color "branch"]
 	current = green
+[init]
+	defaultBranch = main
