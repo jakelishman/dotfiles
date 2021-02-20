@@ -659,6 +659,8 @@ hi! link gitcommitUnmergedArrow  gitcommitUnmergedFile
 "exe "hi! gitcommitArrow"
 "exe "hi! gitcommitOverflow"
 "exe "hi! gitcommitBlank"
+" Set the highlighting for the "signs" column.
+hi! link SignColumn LineNr
 exe "hi! GitGutterAdd"          .s:fmt_none     .s:fg_green     .s:bg_base02
 exe "hi! GitGutterChange"       .s:fmt_none     .s:fg_yellow    .s:bg_base02
 exe "hi! GitGutterDelete"       .s:fmt_none     .s:fg_yellow    .s:bg_base02

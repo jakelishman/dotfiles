@@ -12,12 +12,13 @@ Plugin 'gmarik/Vundle.vim'
 " Syntax checker integrations (rust, latex, C)
 Plugin 'w0rp/ale'
 
+" Git integration
+Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
+
 " NERDTree file browser (and git symbols)
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-
-" Git gutter symbols to show changes.
-Plugin 'airblade/vim-gitgutter'
 
 " Delete surrounding brackets `ds)`.
 Plugin 'tpope/vim-surround'
@@ -127,6 +128,7 @@ let g:vimtex_compiler_latexmk = {
         \ '-file-line-error',
         \ '-synctex=0',
         \ '-interaction=nonstopmode',
+        \ '-shell-escape',
     \ ],
 \}
 
@@ -198,6 +200,9 @@ augroup END
 " Correct capital letter typos!
 command Q q
 command W w
+
+" Set up gitgutter and fugitive to work ok together.
+"let g:gitgutter_map_keys = 0
 
 " Set language for the spellcheck, but don't turn it on.
 set spelllang=en_gb
