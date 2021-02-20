@@ -200,7 +200,11 @@ PS1+=${ps1_reset}' '
 
 # Continuation prompt format.
 PS2=${ps1_reset}
-PS2+=${ps1_username}${USER//?/-}
+if [[ -n "$USERNAME" ]]; then
+    PS2+=${ps1_username}${USERNAME//?/-}
+else
+    PS2+=${ps1_username}${USER//?/-}
+fi
 PS2+=${ps1_yellow}'-'${ps1_blue}
 PS2+=${HOSTNAME//?/-}${ps1_username}'>'
 PS2+=${ps1_reset}' '
