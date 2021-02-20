@@ -1,3 +1,8 @@
+[MASTER]
+
+unsafe-load-any-extension=y
+
+
 [MESSAGES CONTROL]
 
 disable=invalid-name,
@@ -16,3 +21,12 @@ disable=invalid-name,
         broad-except,
         unused-wildcard-import,
         no-else-return,
+        # Avoid duplicates with pycodestyle
+        unneeded-not,
+        line-too-long,
+        unnecessary-semicolon,
+        trailing-whitespace,
+        missing-final-newline,
+        bad-indentation,
+        multiple-statements,
+        bare-except
