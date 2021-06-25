@@ -68,6 +68,8 @@ if [[ "$TERM_PROGRAM" = "iTerm.app" ]]; then
     italics="3;"
 elif [[ -n "$ConEmuBuild" ]]; then
     italics="42;"
+elif [[ "$OS" = "Windows_NT" ]]; then
+    italics="3;"
 else
     italics=""
 fi
@@ -156,10 +158,7 @@ function _bashrc_ps1_preprompt {
             pre=' '
             line_len=$((1 + line_len + cur_len))
         fi
-        echo -en "$pre"
-        echo -en '\e['"${colours[$i]}m${parts[$i]}"
-        echo -en '\e[0m'
-        echo -en "$post"
+        printf "$pre"'\e['"${colours[$i]}m${parts[$i]}"'\e[0m'"$post"
     done
     echo ""
 }
@@ -185,15 +184,15 @@ function _bashrc_ps1_conda {
 
 # Print a string showing the git status.
 function _bashrc_ps1_git {
-    if [ -e "${bash_files_dir}/git-prompt.sh" ]; then
+    if [[ -e "${bash_files_dir}/git-prompt.sh" ]]; then
         __git_ps1 '(%s)'
     fi
 }
 
 # Default prompt format.
 PS1=${ps1_reset}
-PS1+=${ps1_red}'$(_bashrc_error_code)\n'${ps1_reset}
-PS1+='$(_bashrc_ps1_preprompt)\n'
+PS1+=${ps1_red}'`_bashrc_error_code`\n'${ps1_reset}
+PS1+='`_bashrc_ps1_preprompt`\n'
 PS1+=${ps1_username}'\u'${ps1_yellow}'@'
 PS1+=${ps1_blue}'\h'${ps1_username}'\$'
 PS1+=${ps1_reset}' '
