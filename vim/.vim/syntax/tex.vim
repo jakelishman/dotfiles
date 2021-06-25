@@ -24,9 +24,9 @@ let s:normal_contains = join(s:normal_contains_list, ',')
 syntax iskeyword \,*,a-z,A-Z
 
 " Super generic catch-alls.
-syntax match TeXCommandSymbol '\v\\[a-zA-Z0-9#%$]'
-syntax match TeXCommandWord   '\v\\[a-zA-Z]+\*?'
-syntax match TeXCommandAtMacro '\v\\[a-zA-Z]*\@[a-zA-Z@]*\*?'
+syntax match TeXCommandSymbol '\v\\[a-zA-Z0-9#%$]' contains=@NoSpell
+syntax match TeXCommandWord   '\v\\[a-zA-Z]+\*?' contains=@NoSpell
+syntax match TeXCommandAtMacro '\v\\[a-zA-Z]*\@[a-zA-Z@]*\*?' contains=@NoSpell
 syntax match TeXAccent #\v\\[`'"~=.].#
 syntax match TeXAccent #\v\\[bcdktuvH]\s+\S#
 syntax match TeXComment #\v\%.*$#
@@ -34,13 +34,14 @@ syntax match TeXCommandSymbol '\v\\[\{\}]'
 
 syntax match TeXImport #\v\\(documentclass|usepackage)>#
     \ skipwhite nextgroup=TeXImportOptions,TeXImportPackages
+    \ contains=@NoSpell
 syntax region TeXImportOptions matchgroup=TeXGroupDelimiter start='\[' end=']'
     \ transparent
-    \ contained contains=TeXImportOption
+    \ contained contains=TeXImportOption,@NoSpell
     \ skipwhite nextgroup=TeXImportPackages
 syntax region TeXImportPackages matchgroup=TeXGroupDelimiter start='{' end='}'
     \ transparent
-    \ contained contains=TeXImportPackage
+    \ contained contains=TeXImportPackage,@NoSpell
 syntax match TeXImportOption #\v[a-zA-Z\&0-9]+# contained
     \ skipwhite nextgroup=TeXImportEquals
 syntax match TeXImportEquals '=' contained
@@ -50,9 +51,10 @@ syntax match TeXImportPackage #\v\w+# contained
 
 syntax match TeXBeginEnd #\v\\(begin|end)>#
     \ skipwhite nextgroup=TeXBeginEndGroup
+    \ contains=@NoSpell
 execute 'syntax region TeXBeginEndGroup matchgroup=TeXBeginEndGroupDelimiter'
     \ . ' start=#\v\{# skip=#\\\\|\\\}# end=#\v\}#'
-    \ . ' contained contains=' . s:normal_contains
+    \ . ' contained contains=@NoSpell' . s:normal_contains
 
 "" Match TeX lengths
 let s:tex_single_length='\v[-+]?(\d*\.?\d+|\d+\.?\d*)\s*(pt|mm|cm|in|ex|em|bp|pc|dd|cc|nd|nc|sp)'
@@ -67,14 +69,19 @@ execute 'syntax match TeXLength #'
     \ . '(\s+plus\s+' . s:tex_single_length . ')?'
     \ . '(\s+minus\s+' . s:tex_single_length . ')?'
     \ . '#'
+    \ . ' contains=@NoSpell'
 execute 'syntax match TeXLength #'
     \ . s:tex_single_length
     \ . '\s+minus\s+' . s:tex_single_length . '\s+plus\s+' . s:tex_single_length
     \ . '#'
+    \ . ' contains=@NoSpell'
 
 "" Match LaTeX sectioning commands as keywords.
-let s:section_commands = ['section', 'subsection', 'subsubsection', 'paragraph',
-                         \'chapter', 'part']
+let s:section_commands = [
+    \ 'part', 'chapter',
+    \ 'section', 'subsection', 'subsubsection',
+    \ 'paragraph', 'subparagraph',
+\ ]
 execute 'syntax keyword TeXSection \\' . join(s:section_commands, ' \\')
 execute 'syntax keyword TeXSection \\' . join(s:section_commands, '* \\') . '*'
 
@@ -97,13 +104,14 @@ execute 'syntax match TeXMathLetter'
 
 syntax match TeXAlignment '&'
 
-syntax match TeXMacroDefinition #\v\\(def|let)[^a-zA-Z]#me=e-1
-syntax match TeXMacroDefinition #\v\\(re)?newcommand\*?[^[a-zA-Z]#me=e-1
-syntax match TeXMacroDefinition #\v\\newlength[^a-zA-Z]#me=e-1
-syntax match TeXMacroArgument '\v#{1,3}\d'
+syntax match TeXMacroDefinition #\v\\(def|let)[^a-zA-Z]#me=e-1 contains=@NoSpell
+syntax match TeXMacroDefinition #\v\\(re)?newcommand\*?[^[a-zA-Z]#me=e-1 contains=@NoSpell
+syntax match TeXMacroDefinition #\v\\newlength[^a-zA-Z]#me=e-1 contains=@NoSpell
+syntax match TeXMacroArgument '\v#{1,3}\d' contains=@NoSpell
 
 syntax match TeXSizeModifier
     \ #\v\\([bB]igg?[rl]?|left|right)([|()]|\[|\]|\\\{|\\\}|\\[rl]angle|\.)#
+    \ contains=@NoSpell
 
 syntax region TeXGroup matchgroup=TeXGroupDelimiter
     \ start=#\v\{# skip=#\\\\|\\\}# end=#\v\}#
@@ -120,6 +128,7 @@ let s:math_contains_list = [
     \ 'TeXGroup', 'TeXAlignment', 'TeXCommandWord', 'TeXCommandSymbol',
     \ 'TeXComment', 'TeXSizeModifier', 'TeXReferenceCommand', 'TeXMathLetter',
     \ 'TeXSuperSubscript', 'TeXMathInnerText', 'TeXBeginEnd',
+    \ '@NoSpell',
 \ ]
 let s:math_contains = join(s:math_contains_list, ',')
 function! s:make_math_command(start, finish)
