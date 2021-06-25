@@ -20,7 +20,6 @@ disable=invalid-name,
         len-as-condition,
         broad-except,
         unused-wildcard-import,
-        no-else-return,
         # Avoid duplicates with pycodestyle
         unneeded-not,
         line-too-long,
