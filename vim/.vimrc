@@ -128,7 +128,6 @@ let g:vimtex_compiler_latexmk = {
     \ 'options'    : [
         \ '-pdf',
         \ '-verbose',
-        \ '-file-line-error',
         \ '-synctex=0',
         \ '-interaction=nonstopmode',
         \ '-shell-escape',
@@ -141,6 +140,9 @@ let g:vimtex_syntax_enabled=0
 " Don't let vimtex autoindent things (it sucks at it).
 let g:vimtex_indent_enabled=0
 let g:latex_indent_enabled=0
+
+" Use pplatex as a better log message parser.
+let g:vimtex_quickfix_method="pplatex"
 
 " Disable insert mode mappings.
 let g:vimtex_imaps_leader='¬'
