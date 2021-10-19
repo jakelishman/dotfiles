@@ -241,5 +241,36 @@ if echo | grep --color=auto "" &>/dev/null; then
     alias grep='grep --color=auto'
 fi
 
+
+if [[ $TERM_PROGRAM == "iTerm.app" ]]; then
+    function set-bg {
+        case $# in
+            0) arg='Dark';;
+            1) arg=$1;;
+            *) echo "Usage: set-bg [profile-name]" >&2; return 1;;
+        esac
+        case $arg in
+            [dD]ark)
+                arg=Dark
+                _bashrc_sol_main=$_bashrc_sol_base0
+                _bashrc_sol_comment=$_bashrc_sol_base00
+                ;;
+            [lL]ight) arg=Light
+                _bashrc_sol_main=$_bashrc_sol_base00
+                _bashrc_sol_comment=$_bashrc_sol_base0
+                ;;
+            *)
+                echo "Unknown profile name '$arg'. Options are 'Dark' and 'Light'." >&2;
+                return 2;
+                ;;
+        esac
+        echo -en "\033]50;SetProfile=$arg\a"
+        export ITERM_PROFILE="$arg" _ITERM_PROFILE="$arg"
+        _bashrc_ls_colors
+        _bashrc_ps1
+    }
+    if [[ -v _ITERM_PROFILE ]]; then set-bg "$_ITERM_PROFILE"; fi
+fi
+
 # Source any final bash hooks.
 $(_bashrc_source_if_exists "${bash_files_dir}/bashrc-hook-final.bash")
