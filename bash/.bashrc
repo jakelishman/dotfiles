@@ -45,34 +45,37 @@ $(_bashrc_source_if_exists "${bash_files_dir}/bashrc-hook-init.bash")
 ## Variable setup
 
 # ANSI colour codes corresponding to the solarised colours.
-sol_base03='1;30'
-sol_base02='30'
-sol_base01='1;32'
-sol_base00='1;33'
-sol_base0='1;34'
-sol_base1='1;36'
-sol_base2='37'
-sol_base3='1;37'
-sol_yellow='33'
-sol_orange='1;31'
-sol_red='31'
-sol_magenta='35'
-sol_violet='1;35'
-sol_blue='34'
-sol_cyan='36'
-sol_green='32'
+_bashrc_sol_base03='1;30'
+_bashrc_sol_base02='30'
+_bashrc_sol_base01='1;32'
+_bashrc_sol_base00='1;33'
+_bashrc_sol_base0='1;34'
+_bashrc_sol_base1='1;36'
+_bashrc_sol_base2='37'
+_bashrc_sol_base3='1;37'
+_bashrc_sol_yellow='33'
+_bashrc_sol_orange='1;31'
+_bashrc_sol_red='31'
+_bashrc_sol_magenta='35'
+_bashrc_sol_violet='1;35'
+_bashrc_sol_blue='34'
+_bashrc_sol_cyan='36'
+_bashrc_sol_green='32'
 
 # If we're running iTerm2, then we can safely insert the sequence to enable
 # italics into colour sequences.
 if [[ "$TERM_PROGRAM" = "iTerm.app" ]]; then
-    italics="3;"
+    _bashrc_italics="3;"
 elif [[ -n "$ConEmuBuild" ]]; then
-    italics="42;"
+    _bashrc_italics="42;"
 elif [[ "$OS" = "Windows_NT" ]]; then
-    italics="3;"
+    _bashrc_italics="3;"
 else
-    italics=""
+    _bashrc_italics=""
 fi
+
+_bashrc_sol_comment=${_bashrc_sol_base00}
+_bashrc_sol_main=${_bashrc_sol_base0}
 
 export CC=gcc GCC_COLORS
 export EDITOR=vim
@@ -87,14 +90,17 @@ export LESS=FrX
 # they're broken links, in which case they're red.
 #
 # The proceeding '0;' resets any colour flags.
-LS_COLORS=""
-LS_COLORS+=":no=${italics}${sol_base00}"
-LS_COLORS+=":fi=${sol_base0}"
-LS_COLORS+=":ex=${sol_blue}"
-LS_COLORS+=":di=${sol_magenta}"
-LS_COLORS+=":ln=${sol_green}"
-LS_COLORS+=":or=${sol_red}"
-export LS_COLORS
+function _bashrc_ls_colors {
+    LS_COLORS=""
+    LS_COLORS+=":no=${_bashrc_italics}${_bashrc_sol_comment}"
+    LS_COLORS+=":fi=${_bashrc_sol_main}"
+    LS_COLORS+=":ex=${_bashrc_sol_blue}"
+    LS_COLORS+=":di=${_bashrc_sol_magenta}"
+    LS_COLORS+=":ln=${_bashrc_sol_green}"
+    LS_COLORS+=":or=${_bashrc_sol_red}"
+    export LS_COLORS
+}
+_bashrc_ls_colors
 
 # Functions for better git integration with bash.
 $(_bashrc_source_if_exists "${bash_files_dir}/git-prompt.sh")
@@ -106,25 +112,21 @@ export GIT_PS1_SHOWDIRTYSTATE=1 GIT_SSH
 # The '\[', '\]' wrap non-printing characters. These ensure that readline knows
 # how many characters are in the prompt, so it deletes the correct number when
 # the line is cleared, and when it wraps.
-ps1_red='\[\e['$sol_red'm\]'
-ps1_green='\[\e['$sol_green'm\]'
-ps1_yellow='\[\e['$sol_yellow'm\]'
-ps1_blue='\[\e['$sol_blue'm\]'
-ps1_magenta='\[\e['$sol_magenta'm\]'
-ps1_violet='\[\e['$sol_violet'm\]'
-ps1_base0='\[\e['$sol_base0'm\]'
+function _bashrc_ansi_to_ps1 {
+    echo -n '\[\e['$1'm\]'
+}
 ps1_reset='\[\e[0m\]'
 if [ "$UID" -eq 0 ]; then
-    ps1_username=$ps1_red
+    ps1_username=$(_bashrc_ansi_to_ps1 $_bashrc_sol_red)
 else
-    ps1_username=$ps1_magenta
+    ps1_username=$(_bashrc_ansi_to_ps1 $_bashrc_sol_magenta)
 fi
 
-if [[ -z $bashrc_ps1_line_length ]]; then
-    bashrc_ps1_line_length=80
+if [[ -z $_bashrc_ps1_line_length ]]; then
+    _bashrc_ps1_line_length=80
 fi
-if [[ -z $bashrc_ps1_single_length ]]; then
-    bashrc_ps1_single_length=50
+if [[ -z $_bashrc_ps1_single_length ]]; then
+    _bashrc_ps1_single_length=50
 fi
 
 # Print the relevant parts of the pre-prompt to the screen in a desired order.
@@ -134,7 +136,7 @@ function _bashrc_ps1_preprompt {
     declare -a parts=("$(_bashrc_ps1_pwd)"
                       "$(_bashrc_ps1_conda)"
                       "$(_bashrc_ps1_git)")
-    declare -a colours=("${sol_yellow}" "${sol_violet}" "${sol_green}")
+    declare -a colours=("${_bashrc_sol_yellow}" "${_bashrc_sol_violet}" "${_bashrc_sol_green}")
     local pre
     local post
     for i in $(seq 0 $((${#parts[@]} - 1))); do
@@ -143,7 +145,7 @@ function _bashrc_ps1_preprompt {
         post=''
         if [[ $cur_len -eq 0 ]]; then
             continue
-        elif [[ $cur_len -gt $bashrc_ps1_single_length ]]; then
+        elif [[ $cur_len -gt $_bashrc_ps1_single_length ]]; then
             if [[ $line_len -ne 0 ]]; then
                 pre='\n'
             fi
@@ -151,7 +153,7 @@ function _bashrc_ps1_preprompt {
             line_len=0
         elif [[ $line_len -eq 0 ]]; then
             line_len=$cur_len
-        elif [[ $((line_len + cur_len)) -gt $bashrc_ps1_line_length ]]; then
+        elif [[ $((line_len + cur_len)) -gt $_bashrc_ps1_line_length ]]; then
             pre='\n'
             line_len=$cur_len
         else
@@ -190,12 +192,17 @@ function _bashrc_ps1_git {
 }
 
 # Default prompt format.
-PS1=${ps1_reset}
-PS1+=${ps1_red}'`_bashrc_error_code`\n'${ps1_reset}
-PS1+='`_bashrc_ps1_preprompt`\n'
-PS1+=${ps1_username}'\u'${ps1_yellow}'@'
-PS1+=${ps1_blue}'\h'${ps1_username}'\$'
-PS1+=${ps1_reset}' '
+function _bashrc_ps1 {
+    local _ps1
+    _ps1=${ps1_reset}
+    _ps1+=$(_bashrc_ansi_to_ps1 ${_bashrc_sol_red})'`_bashrc_error_code`\n'${ps1_reset}
+    _ps1+='`_bashrc_ps1_preprompt`\n'
+    _ps1+=${ps1_username}'\u'$(_bashrc_ansi_to_ps1 ${_bashrc_sol_yellow})'@'
+    _ps1+=$(_bashrc_ansi_to_ps1 ${_bashrc_sol_blue})'\h'${ps1_username}'\$'
+    _ps1+=${ps1_reset}' '
+    export PS1=$_ps1
+}
+_bashrc_ps1
 
 # Continuation prompt format.
 PS2=${ps1_reset}
@@ -207,7 +214,7 @@ fi
 PS2+=${ps1_yellow}'-'${ps1_blue}
 PS2+=${HOSTNAME//?/-}${ps1_username}'>'
 PS2+=${ps1_reset}' '
-export PS1 PS2
+export PS2
 
 # Source machine-specific code
 $(_bashrc_source_if_exists \
