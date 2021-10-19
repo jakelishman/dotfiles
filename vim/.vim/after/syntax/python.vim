@@ -78,7 +78,8 @@ syn clear pythonStatement
 syn keyword pythonStatement as assert break continue del global
 syn keyword pythonStatement lambda nonlocal pass return with
 syn keyword pythonStatement yield nextgroup=pythonYieldFrom skipwhite
-syn keyword pythonStatement class def nextgroup=pythonFunction skipwhite
+syn keyword pythonStatement def nextgroup=pythonFunction skipwhite
+syn keyword pythonStatement class nextgroup=pythonClass skipwhite
 syn keyword pythonYieldFrom from contained
 hi link pythonYieldFrom pythonStatement
 
