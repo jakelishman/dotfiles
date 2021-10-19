@@ -10,7 +10,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 " Syntax checker integrations (rust, latex, C)
-Plugin 'w0rp/ale'
+Plugin 'dense-analysis/ale'
 
 " Git integration
 Plugin 'tpope/vim-fugitive'
@@ -28,6 +28,8 @@ Plugin 'fsharp/vim-fsharp'
 Plugin 'lervag/vimtex'
 Plugin 'rust-lang/rust.vim'
 Plugin 'Vimjas/vim-python-pep8-indent'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'dylon/vim-antlr'
 call vundle#end()
 
 " Set leader keys.
@@ -47,7 +49,11 @@ endif
 
 "" Configure solarized to work correctly
 syntax enable
-set background=dark
+if $TERM_PROGRAM =~ "iTerm.app" && $ITERM_PROFILE == "Light"
+    set background=light
+else
+    set background=dark
+endif
 " Force enable italics in our modified version of solarized.vim
 if $TERM_PROGRAM =~ "iTerm.app"
     set t_Co=16
@@ -74,10 +80,6 @@ set relativenumber
 "" Highlight the current line.
 set cursorline
 
-"" Set smart casings in search functions
-set ignorecase
-set smartcase
-
 "" Set text geometry and scrolling
 set scrolloff=4
 set textwidth=80
@@ -101,6 +103,7 @@ set backspace=indent,eol,start
 "" Set statusline to be actually useful.
 set laststatus=2
 set statusline=%t%r%m\ %y[%{&ff}]%h\ %=\ %c,%l/%L\ %P
+"set statusline=%t%r%m\ %y[%{&ff}]%h\ %{fugitive#statusline()}\ %=\ %c,%l/%L\ %P
 
 "" Set the filling characters for various gutters.
 " stl   the status line of the current window (no filling, because it's visible)
@@ -146,8 +149,10 @@ let g:vimtex_imaps_enabled=0
 " Make vimtex recognise end-of-line comments when using 'gq'.
 let g:vimtex_format_enabled=1
 
-" Map ^n to toggle the NERDTree browser.
-map <C-n> :NERDTreeToggle<CR>
+" Leader mappings for NERDTree
+nmap <Leader>nn :NERDTreeToggle<CR>
+nmap <Leader>no :NERDTreeFocus<CR>
+nmap <Leader>nf :NERDTreeFind<CR>
 
 if !exists("*LongLineMode")
     function LongLineMode()
@@ -164,14 +169,30 @@ let g:ale_sign_error = '>>'
 let g:ale_sign_warning = '──'
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {
+\   'cpp': ['clangd'],
 \   'sh': ['shellcheck'],
 \   'tex': [],
-\   'python': ['pylint', 'pycodestyle'],
+\   'python': ['pylint', 'pycodestyle', 'mypy'],
 \   'pyrex': ['cython'],
+\   'rust': ['rls'],
 \}
+let g:ale_fixers = {
+\    'python': ['black'],
+\}
+map <Leader>af :ALEFix<CR>
+map <Leader>aj :ALENext<CR>
+map <Leader>ak :ALEPrevious<CR>
+map <Leader>ad :ALEGoToDefinition<CR>
+map <Leader>al :ALEDetail<CR>
+map <Leader>ah :ALEHover<CR>
+map <Leader>ar :ALEFindReferences<CR>
+map <Leader>aa :ALERepeatSelection<CR>
 augroup ALE
     autocmd User ALELintPost GitGutter
 augroup END
+
+" Leader mappings to work with git.
+map <Leader>gb :Git blame<CR>
 
 let g:rst_style = 1
 
@@ -211,8 +232,19 @@ set spelllang=en_gb
 let python_no_builtin_highlight = 1
 let python_space_error_highlight = 1
 
+" Rust syntax highlighting
+highlight link rustCommentLineDoc Comment
+
+highlight link jsonCommentError Comment
+
+" Make Jedi autocompletion opt-in.
+let g:jedi#popup_on_dot = 0
+
 " Guarantee that the shell in use is bash.
 let g:is_bash = 1
 
+map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+
 filetype plugin indent on
-syntax on
