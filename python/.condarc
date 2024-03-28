@@ -1,6 +1,7 @@
 # Stop conda from changing the PS1 (the .bashrc file handles it)
-changeps1: False
+changeps1: false
 
 channels:
- - defaults
- - conda-forge
+  - defaults
+  - conda-forge
+auto_activate_base: false

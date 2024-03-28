@@ -74,8 +74,8 @@ else
     _bashrc_italics=""
 fi
 
-_bashrc_sol_comment=${_bashrc_sol_base00}
-_bashrc_sol_main=${_bashrc_sol_base0}
+_bashrc_sol_comment=${_bashrc_sol_base0}
+_bashrc_sol_main=${_bashrc_sol_base00}
 
 export CC=gcc GCC_COLORS
 export EDITOR=vim
@@ -134,7 +134,7 @@ function _bashrc_ps1_preprompt {
     declare -i cur_len=0
     declare -i line_len=0
     declare -a parts=("$(_bashrc_ps1_pwd)"
-                      "$(_bashrc_ps1_conda)"
+                      "$(_bashrc_ps1_python)"
                       "$(_bashrc_ps1_git)")
     declare -a colours=("${_bashrc_sol_yellow}" "${_bashrc_sol_violet}" "${_bashrc_sol_green}")
     local pre
@@ -177,10 +177,26 @@ else
     }
 fi
 
-# Print a string showing the conda status.
-function _bashrc_ps1_conda {
+# Print a string showing the Python status.
+function _bashrc_ps1_python {
+    local conda
+    local venv
     if [[ -n "$CONDA_DEFAULT_ENV" ]]; then
-        echo "($CONDA_DEFAULT_ENV)";
+        conda=$CONDA_DEFAULT_ENV;
+    fi
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        if [[ -f "$VIRTUAL_ENV/NAME" ]]; then
+            venv=$(<"$VIRTUAL_ENV/NAME")
+        else
+            venv=$(basename "$VIRTUAL_ENV")
+        fi
+    fi
+    if [[ -n $conda && -n $venv ]]; then
+        echo "($conda::$venv)"
+    elif [[ -n $venv ]]; then
+        echo "($venv)"
+    elif [[ -n $conda ]]; then
+        echo "($conda)"
     fi
 }
 
