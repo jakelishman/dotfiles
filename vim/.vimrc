@@ -55,11 +55,11 @@ if has("gui_running") && has("gui_macvim")
     set guioptions-=L
 endif
 
-"" Configure solarized to work correctly
-if $TERM_PROGRAM =~ "iTerm.app" && $ITERM_PROFILE == "Light"
-    set background=light
-else
+"" Configure solarized to work correctly.  We default to `light`.
+if $LC_TERMINAL =~ "iTerm2" && $ITERM_PROFILE == "Dark"
     set background=dark
+else
+    set background=light
 endif
 " Force enable italics in our modified version of solarized.vim
 if $TERM_PROGRAM =~ "iTerm.app"
