@@ -126,6 +126,7 @@ syntax region TeXGroup matchgroup=TeXGroupDelimiter
 """" Math mode highlights
 let s:math_contains_list = [
     \ 'TeXGroup', 'TeXAlignment', 'TeXCommandWord', 'TeXCommandSymbol',
+    \ 'TeXCommandAtMacro',
     \ 'TeXComment', 'TeXSizeModifier', 'TeXReferenceCommand', 'TeXMathLetter',
     \ 'TeXSuperSubscript', 'TeXMathInnerText', 'TeXBeginEnd',
     \ '@NoSpell',
