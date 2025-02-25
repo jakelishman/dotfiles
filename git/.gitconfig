@@ -8,7 +8,7 @@
 	safecrlf = false
 	excludesfile = ~/.gitignore_global
 [push]
-	default = simple
+	default = upstream
 [color]
 	ui = auto
 	diff = true
@@ -26,3 +26,8 @@
 	current = green
 [init]
 	defaultBranch = main
+[advice]
+	detachedHead = false
+	skippedCherryPicks = false
+[rerere]
+	enabled = true
