@@ -236,6 +236,10 @@ export PS2
 $(_bashrc_source_if_exists \
     "${bash_files_dir}/bashrc-hook-environment-variables.bash")
 
+if [[ -z $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
+    export VIRTUAL_ENV_DISABLE_PROMPT=1
+fi
+
 # Permanent aliases.
 alias ll='ls -l'
 alias mkdir='mkdir -p'
@@ -258,7 +262,7 @@ if echo | grep --color=auto "" &>/dev/null; then
 fi
 
 
-if [[ $TERM_PROGRAM == "iTerm.app" ]]; then
+if [[ $LC_TERMINAL == "iTerm2" ]]; then
     function set-bg {
         case $# in
             0) arg='Dark';;
