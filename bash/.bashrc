@@ -64,10 +64,8 @@ _bashrc_sol_green='32'
 
 # If we're running iTerm2, then we can safely insert the sequence to enable
 # italics into colour sequences.
-if [[ "$TERM_PROGRAM" = "iTerm.app" ]]; then
+if [[ "$LC_TERMINAL" = "iTerm2" ]]; then
     _bashrc_italics="3;"
-elif [[ -n "$ConEmuBuild" ]]; then
-    _bashrc_italics="42;"
 elif [[ "$OS" = "Windows_NT" ]]; then
     _bashrc_italics="3;"
 else
