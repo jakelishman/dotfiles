@@ -184,6 +184,7 @@ let g:ale_linters_ignore = {
 let g:ale_fixers = {
 \   'python': ['black'],
 \   'rust': ['rustfmt'],
+\   'c': ['clang-format'],
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \}
 let g:ale_virtualtext_cursor = 'none'
