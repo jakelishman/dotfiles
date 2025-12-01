@@ -113,7 +113,7 @@ set statusline=%t%r%m\ %y[%{&ff}]%h\ %=\ %c,%l/%L\ %P
 " stl   the status line of the current window (no filling, because it's visible)
 " stlnc the status line of unfocussed windows ('-' for visibility)
 " vert  the vertical window separator
-set fillchars=stl:\ ,stlnc:_,vert:\│,fold:\ ,diff:\─
+set fillchars=stl:\ ,stlnc:\─,vert:\│,fold:\ ,diff:\─
 
 "" Configure vimtex to do what we want.
 
