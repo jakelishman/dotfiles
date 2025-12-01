@@ -194,7 +194,8 @@ map <Leader>ak :ALEPreviousWrap<CR>
 map <Leader>ad :ALEGoToDefinition<CR>
 map <Leader>ag :ALEGoToTypeDefinition<CR>
 map <Leader>al :ALEDetail<CR>
-map <Leader>ah :ALEHover<CR>
+map <Leader>aw <plug>(ale_find_references)
+map <Leader>ah <plug>(ale_hover)
 map <Leader>ar :ALERename<CR>
 map <Leader>aa :ALERepeatSelection<CR>
 imap <silent> <C-C> <plug>(ale_complete)
