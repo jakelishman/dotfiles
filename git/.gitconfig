@@ -29,5 +29,6 @@
 [advice]
 	detachedHead = false
 	skippedCherryPicks = false
+	mergeConflict = false
 [rerere]
 	enabled = true
