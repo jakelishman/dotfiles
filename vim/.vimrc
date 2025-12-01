@@ -252,6 +252,10 @@ augroup csharp
     autocmd BufNewFile,BufRead *.cs setl textwidth=120
 augroup END
 
+augroup git
+    autocmd BufNewFile,BufRead COMMIT_EDITMSG set spell
+augroup END
+
 " Autoset the coloured column to indivate the text width.
 function! s:updateColorColumn()
     if &textwidth
